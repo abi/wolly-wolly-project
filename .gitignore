@@ -1,0 +1,46 @@
+# Assembled from https://github.com/github/gitignore
+
+#Linux
+
+.* # LOOK HERE (BE VERY CAREFUL ABOUT THIS. IT IGNORES ALL DOTFILES OTHER THAN .gitignore and .npmignore)
+!.gitignore
+!.npmignore
+*~
+
+# KDE
+.directory
+
+#OS X
+
+.DS_Store
+Icon?
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+#Textmate
+
+*.tmproj
+*.tmproject
+tmtags
+
+#Vim
+
+.*.sw[a-z]
+*.un~
+Session.vim
+
+#Emacs
+
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+.elc
+auto-save-list
+tramp
+
