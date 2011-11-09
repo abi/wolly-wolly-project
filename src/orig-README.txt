@@ -13,7 +13,6 @@ mmod_general  -- Almost all the learning and matching computation and utility fu
 mmod_color    -- Shouldn't be named "color", should be named mmod_calc_feature -- these classes, one for each feature take a modality as input 
                  (depth image, color image) and creates a feature image of 8 bit values. These take a mask (training) or not (test), see below.
 
-
 //////////////////A WALK THROUGH OF HOW TO CALL THESE FUNCTIONS//////////////////
 //INCLUDES
 #include <opencv2/opencv.hpp>

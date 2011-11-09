@@ -11,7 +11,7 @@
 #ifndef MMOD_COLOR_H_
 #define MMOD_COLOR_H_
 #include <opencv2/opencv.hpp>
-#include <mmod_general.h>
+#include "mmod_general.h"
 
 #define CALCFEAT_SHOW() {std::cout << __FILE__ << " : "  << __LINE__ << std::endl;}
   //VERBOSE

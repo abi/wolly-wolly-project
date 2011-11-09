@@ -44,3 +44,21 @@ Session.vim
 auto-save-list
 tramp
 
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Makefile .dep files
+*.dep
+
+# Binaries
+a.out
