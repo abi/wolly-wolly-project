@@ -1,0 +1,327 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+\usepackage{cvpr} 
+\usepackage{times} 
+\usepackage{epsfig} 
+\usepackage{graphicx} 
+\usepackage{amsmath} 
+\usepackage{amstext}
+\usepackage{amssymb}
+\usepackage{enumerate} 
+\usepackage{ae,aecompl} 
+\usepackage{hyperref} 
+\cvprfinalcopy  
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}  
+
+\ifcvprfinal
+\pagestyle{empty}\fi
+\end_preamble
+\options 10pt,twocolumn,lettpaper
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+usepackage{amstext}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+usepackage{amssymb}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+usepackage{enumerate}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+usepackage{multirow}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+usepackage{algorithmic}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+usepackage{algorithm}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+usepackage[margin=0.75in]{geometry}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+title{Real Time, Scalable Object Recognition with Linemod and Winner Take
+ All}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+author{
+\end_layout
+
+\begin_layout Plain Layout
+
+Abi Raja
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Stanford University
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\backslash
+tt
+\backslash
+small abii@stanford.edu}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+and
+\end_layout
+
+\begin_layout Plain Layout
+
+Ivan Zhang
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Stanford University
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\backslash
+tt
+\backslash
+small zhifanz@stanford.edu}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+maketitle 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Project Proposal
+\end_layout
+
+\begin_layout Subsection
+Problem
+\end_layout
+
+\begin_layout Standard
+We will be investigating general, real-time object recognition.
+ This problem is interesting because of its various applications in robotics.
+ A good real-time object recognition algorithm would enable robots to perform
+ complex tasks such as identifying mugs in the close vicinity in heavily
+ occluded scenarios and fetching it for the human user.
+\end_layout
+
+\begin_layout Subsection
+Data
+\end_layout
+
+\begin_layout Standard
+We will start with image data and masks provided by Dr.
+ Gary Bradski.
+ Later we may collect new image data and masks using our own camera.
+\end_layout
+
+\begin_layout Subsection
+Algorithm and Implementation
+\end_layout
+
+\begin_layout Standard
+The algorithm that we are working on involves the combination of two existing
+ techniques that have proved quite useful at object recognition, “Linemod”
+ and “winner take all”.
+ Existing implementations of the Linemod algorithm in C++ was provided by
+ Dr.
+ Gary Bradski.
+ We will use and improve upon his implementation and develop a working version
+ of “winner take all” ourselves.
+ Then we would put together the two algorithms into one working system so
+ that they complement each other to achieve fast and scalable object recognition.
+\end_layout
+
+\begin_layout Subsection
+Context and Background
+\end_layout
+
+\begin_layout Standard
+We will first focus our attention to the following two papers:
+\end_layout
+
+\begin_layout Standard
+Multimodal Templates for Real-Time Detection of Texture-less Objects in
+ Heavily Cluttered Scenes.
+ IEEE International Conference on Computer Vision (ICCV), Barcelona, Spain,
+ November 2011.
+\end_layout
+
+\begin_layout Standard
+The Power of Comparative Reasoning.
+ Jay Yagnik , Dennis Strelow, David Ross , Ruei-Sung Lin.
+ International Conference on Computer Vision (ICCV), 2011.
+\end_layout
+
+\begin_layout Standard
+Both papers are recent publications and have yet to be formally presented
+ at conferences.
+ Hence, there are no existing papers that develop off them.
+ However, we are also looking into reading into other prior art related
+ to template-matching.
+\end_layout
+
+\begin_layout Subsection
+Evaluation
+\end_layout
+
+\begin_layout Standard
+Since our project produces very visual results, qualitatively we can evaluate
+ our algorithm by observing how well it performs the recognition task on
+ various image data.
+ 
+\end_layout
+
+\begin_layout Standard
+We will also use standard quantitative methods to evaluate our results,
+ such as constructing the precision and recall curves when the system identifies
+ various objects.
+ To resolve the ambiguity involved with a “correct” result, we define a
+ recognition to be correct if the bounding box overlaps at least 50% with
+ the bounding box a reasonable human would use to bound the object, i.e.
+ the “hard truth”.
+ We will also explore whether the Pascal VOC Challenge benchmark is applicable
+ in this recognition problems.
+\end_layout
+
+\end_body
+\end_document

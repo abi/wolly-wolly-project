@@ -5,6 +5,7 @@ DEPS    := ${SRCS:.cpp=.dep}
 
 CXX = g++
 CCFLAGS = -arch i386 -g -I./ -DSTANDALONE_DEBUG
+# -I/usr/local/Cellar/opencv/2.2/include/opencv/
 LDFLAGS = -arch i386
 LIBS    =
 # TODO: Are the libraries already in the path that we want?
