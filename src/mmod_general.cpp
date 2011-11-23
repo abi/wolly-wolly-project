@@ -68,7 +68,7 @@ mmod_general::mmod_general()
 	 */
 	void mmod_general::visualize_binary_image(const cv::Mat &I, cv::Mat &iB)
 	{
-		if(iB.empty()||iB.rows != I.rows || iB.cols != I.cols)
+		if(iB.empty() || iB.rows != I.rows || iB.cols != I.cols)
 		{
 			iB.create(I.size(),CV_8UC3);
 		}
