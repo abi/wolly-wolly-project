@@ -1,0 +1,22 @@
+#include <iostream>
+#include <opencv2/opencv.hpp>
+#include <stdio.h>
+#include <string>
+
+using namespace cv;
+using namespace std;
+
+int main(int argc, char* argv[]) {
+  namedWindow("raw", 0);
+  string image_file(argv[1]);
+  cout << "About to read file " << endl;
+  Mat image = imread(image_file);
+  if( !image.data ){ // check if the image has been loaded properly
+     cout << "Could read file " << image_file;
+     return -1;
+  }
+  cout << "Read file" << endl;
+  imshow("raw", image);
+  while(1){};
+  return 0;
+}
