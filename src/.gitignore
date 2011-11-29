@@ -6,3 +6,6 @@ data
 
 # Binaries
 match
+
+# Temp and trash files that ought not be committed
+trash

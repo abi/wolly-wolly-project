@@ -51,24 +51,17 @@ Basic knowledge about image processing
 Be familiar with OpenCV
 
 
+## Code documentation
+
+### mmod_color
+
+HLS Features and Gradient features
+
+Depth features are only used for the objects in data/imgs.
+
+
+
 # TODO
 
 * Fix bug mentioned in email
 * Train the LINE-MOD algorithm on the test data
-* Fix this compilation error:
-
-```
-g++ -arch i386 -g -I./ -DSTANDALONE_DEBUG -MM mmod_color.cpp > mmod_color.dep
-g++ -arch i386 -g -I./ -DSTANDALONE_DEBUG -o mmod_color.o -c mmod_color.cpp 
-g++ -arch i386 -g -I./ -DSTANDALONE_DEBUG -MM mmod_feature.cpp > mmod_feature.dep
-g++ -arch i386 -g -I./ -DSTANDALONE_DEBUG -o mmod_feature.o -c mmod_feature.cpp 
-g++ -arch i386 -g -I./ -DSTANDALONE_DEBUG -MM mmod_general.cpp > mmod_general.dep
-g++ -arch i386 -g -I./ -DSTANDALONE_DEBUG -o mmod_general.o -c mmod_general.cpp 
-mmod_general.cpp: In member function ‘int mmod_general::learn_a_template(cv::Mat&, cv::Mat&, int, mmod_features&)’:
-mmod_general.cpp:972: error: invalid initialization of reference of type ‘const cv::Mat&’ from expression of type ‘std::vector<cv::Point_<int>, std::allocator<cv::Point_<int> > >’
-/usr/local/include/opencv2/imgproc/imgproc.hpp:809: error: in passing argument 1 of ‘cv::Rect cv::boundingRect(const cv::Mat&)’
-mmod_general.cpp: In member function ‘int mmod_general::score_with_ground_truth(const std::vector<cv::Rect_<int>, std::allocator<cv::Rect_<int> > >&, const std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, std::string&, cv::Mat&, int&, int&, int&, cv::Rect&)’:
-mmod_general.cpp:1083: error: invalid initialization of reference of type ‘const cv::Mat&’ from expression of type ‘std::vector<cv::Point_<int>, std::allocator<cv::Point_<int> > >’
-/usr/local/include/opencv2/imgproc/imgproc.hpp:809: error: in passing argument 1 of ‘cv::Rect cv::boundingRect(const cv::Mat&)’
-make: *** [mmod_general.o] Error 1
-```
