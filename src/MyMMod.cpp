@@ -225,18 +225,40 @@ int main(int argc, char* argv[]) {
 	for(int i = 0; i<trainTeaI.size(); ++i, ++framenum)
 	{
 		ColorRaw0 = imread(trainTeaI[i]);
-		Mask0 = imread(trainTeaM[i],0);
-		buildPyramid(ColorRaw0, ColorPyr, PYRLEVELS);
-		buildPyramid(Mask0,MaskPyr,PYRLEVELS);
-		ColorRaw = ColorPyr[PYRLEVELS];
-		Mask = MaskPyr[PYRLEVELS];
+        // FILE* test = fopen(trainTeaI[i], "rt");
+        // 
+        //      if (!test) {
+        //          cout << "\nCouldn't read the file..." << endl;
+        //          return -1;
+        //      }
+        //      
+        if( !ColorRaw0.data ){ // check if the image has been loaded properly
+            cout << "Could not read the file";
+            return -1;
+        }
+        cout << "About to read file" << trainTeaI[i] << " ... " << i << endl;
+		Mask0 = imread(trainTeaM[i], 0);
+		if( !Mask0.data ){ // check if the image has been loaded properly
+            cout << "Could not read the mask file";
+            return -1;
+        }
+        cout << "After reading mask file " << trainTeaM[i] << "... " << i << endl;
+        cout << "Before pyramid .. ... " << endl;
+        buildPyramid(ColorRaw0, ColorPyr, PYRLEVELS);
+        buildPyramid(Mask0,MaskPyr,PYRLEVELS);
+		ColorRaw = ColorRaw0; // ColorPyr[PYRLEVELS];
+		Mask = Mask0; // MaskPyr[PYRLEVELS];
+		cout << "Before showing ... " << endl;
 		imshow("raw",ColorRaw);
-
+        cout << "After showing ... " << endl;
+        
 		//PROCESS TO GET FEATURES
 		calcHLS.computeColorHLS(ColorRaw,colorfeat,Mask,"train");
 		calcGrad.computeGradients(ColorRaw,gradfeat,Mask,"train");
 
 		g.visualize_binary_image(gradfeat, Gvis);
+		cout << "After binary ... " << endl;
+        
 		imshow("GradFeat",Gvis);
 		//		calcDepth.computeDepthWTA(DepthRaw, depthfeat, Mask);
 		FeatModes.clear();
