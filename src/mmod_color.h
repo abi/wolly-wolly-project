@@ -60,20 +60,20 @@ public:
 
 ////////////Gradients///////////////////////////////////////////////////////////
 class gradients {
-	cv::Mat mag0, phase0, mag1, phase1, mag2, phase2;			//Temp store for gradient processing
-	cv::Mat grad_x, grad_y;
-	std::vector<cv::Mat> RGB;									//Just temp store split
-public:
+  cv::Mat mag0, phase0, mag1, phase1, mag2, phase2; //Temp store for gradient processing
+  cv::Mat grad_x, grad_y;
+  std::vector<cv::Mat> RGB; //Just temp store split
+ public:
 
-	////////////////////////GRADIENT FEATURES//////////////////////////////////////////////
-	/**
-	 * \brief Compute gradient linemod features from the maximum color plane gradient. Ignores weak gradients
-	 * @param Iin			Input BGR, CV_8UC3 image
-	 * @param Icolorord		Output CV_8UC1 image
-	 * @param Mask			compute on masked region (can be left empty) CV_8UC3 or CV_8UC1 ok
-	 * @param mode  If "test", noise reduce and blur the resulting image (DEFAULT), "none": do nothing, else noise reduce for training
-	 */
-	void computeGradients(const cv::Mat &Iin, cv::Mat &Icolorord, const cv::Mat Mask, std::string mode = "test" );
+  ////////////////////////GRADIENT FEATURES//////////////////////////////////////////////
+  /**
+   * \brief Compute gradient linemod features from the maximum color plane gradient. Ignores weak gradients
+   * @param Iin			Input BGR, CV_8UC3 image
+   * @param Icolorord		Output CV_8UC1 image
+   * @param Mask			compute on masked region (can be left empty) CV_8UC3 or CV_8UC1 ok
+   * @param mode  If "test", noise reduce and blur the resulting image (DEFAULT), "none": do nothing, else noise reduce for training
+   */
+  void computeGradients(const cv::Mat &Iin, cv::Mat &Icolorord, const cv::Mat Mask, std::string mode = "test" );
 
 };
 

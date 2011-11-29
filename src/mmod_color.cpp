@@ -160,47 +160,41 @@ void colorhls::computeColorHLS(const cv::Mat &Iin, cv::Mat &Icolorord, const cv:
  */
 void gradients::computeGradients(const cv::Mat &Iin, cv::Mat &Icolorord, const cv::Mat Mask, std::string mode)
 {
-	//CHECK INPUTS
-	CALCFEAT_DEBUG_1(cout << "In colorhls::computeColorHLS" << end;);
-//	if(Itmp.empty() || Iin.rows != Itmp.rows || Iin.cols != Itmp.cols)
-//	{
-//		Itmp.create(Iin.size(),CV_8UC1);
-//	}
-	if(Icolorord.empty() || Iin.rows != Icolorord.rows || Iin.cols != Icolorord.cols)
-	{
-		Icolorord.create(Iin.size(),CV_8UC1);
-	}
-	Icolorord = Scalar::all(0); //else make sure it's zero
-	cv::Mat temp;
-	if (!Mask.empty()) //We have a mask
-	{
-		if (Iin.size() != Mask.size())
-		{
-			cerr << "ERROR: Mask in computeColorOrder size != Iina" << endl;
-			return;
-		}
-		if (Mask.type() == CV_8UC3)
-		{
-			//don't write into the Mask, as its supposed to be const.
-			cv::cvtColor(Mask, temp, CV_RGB2GRAY);
-		}
-		else
-			temp = Mask;
-	}
-	//FIND THE MAX GRADIENT RESPONSE ACROSS COLORS
-//	cvtColor(Iin, Itmp, CV_RGB2GRAY);
-	vector<Mat> RGB;
-	split(Iin, RGB);
+  //CHECK INPUTS
+  CALCFEAT_DEBUG_1(cout << "In colorhls::computeColorHLS" << end;);
+//if(Itmp.empty() || Iin.rows != Itmp.rows || Iin.cols != Itmp.cols)
+//{
+//  Itmp.create(Iin.size(),CV_8UC1);
+//}
+  if(Icolorord.empty() || Iin.rows != Icolorord.rows || Iin.cols != Icolorord.cols) {
+    Icolorord.create(Iin.size(),CV_8UC1);
+  }
+  Icolorord = Scalar::all(0); //else make sure it's zero
+  cv::Mat temp;
+  if (!Mask.empty()) { // we have mask
+    if (Iin.size() != Mask.size()) {
+      cerr << "ERROR: Mask in computeColorOrder size != Iina" << endl;
+      return;
+    }
+    if (Mask.type() == CV_8UC3) {
+      //don't write into the Mask, as its supposed to be const.
+      cv::cvtColor(Mask, temp, CV_RGB2GRAY);
+    } else temp = Mask;
+  }
+  //FIND THE MAX GRADIENT RESPONSE ACROSS COLORS
+//cvtColor(Iin, Itmp, CV_RGB2GRAY);
+  vector<Mat> RGB;
+  split(Iin, RGB);
 
-	Scharr( RGB[0], grad_x, CV_32F, 1, 0, 1, 0, BORDER_DEFAULT ); //dx
-	Scharr( RGB[0], grad_y, CV_32F, 0, 1, 1, 0, BORDER_DEFAULT ); //dy
-	cartToPolar(grad_x, grad_y, mag0, phase0, true); //True => in degrees not radians
-	Scharr( RGB[1], grad_x, CV_32F, 1, 0, 1, 0, BORDER_DEFAULT ); //dx
-	Scharr( RGB[1], grad_y, CV_32F, 0, 1, 1, 0, BORDER_DEFAULT ); //dy
-	cartToPolar(grad_x, grad_y, mag1, phase1, true); //True => in degrees not radians
-	Scharr( RGB[2], grad_x, CV_32F, 1, 0, 1, 0, BORDER_DEFAULT ); //dx
-	Scharr( RGB[2], grad_y, CV_32F, 0, 1, 1, 0, BORDER_DEFAULT ); //dy
-	cartToPolar(grad_x, grad_y, mag2, phase2, true); //True => in degrees not radians
+  Scharr( RGB[0], grad_x, CV_32F, 1, 0, 1, 0, BORDER_DEFAULT ); //dx
+  Scharr( RGB[0], grad_y, CV_32F, 0, 1, 1, 0, BORDER_DEFAULT ); //dy
+  cartToPolar(grad_x, grad_y, mag0, phase0, true); //True => in degrees not radians
+  Scharr( RGB[1], grad_x, CV_32F, 1, 0, 1, 0, BORDER_DEFAULT ); //dx
+  Scharr( RGB[1], grad_y, CV_32F, 0, 1, 1, 0, BORDER_DEFAULT ); //dy
+  cartToPolar(grad_x, grad_y, mag1, phase1, true); //True => in degrees not radians
+  Scharr( RGB[2], grad_x, CV_32F, 1, 0, 1, 0, BORDER_DEFAULT ); //dx
+  Scharr( RGB[2], grad_y, CV_32F, 0, 1, 1, 0, BORDER_DEFAULT ); //dy
+  cartToPolar(grad_x, grad_y, mag2, phase2, true); //True => in degrees not radians
 
 	//COMPUTE RESONABLE THRESHOLDS
 	Scalar mean0,std0,mean1,std1,mean2,std2;

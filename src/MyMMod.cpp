@@ -224,17 +224,31 @@ int main(int argc, char* argv[]) {
 	Mat_<uchar>::iterator c;
 	for(int i = 0; i<trainTeaI.size(); ++i, ++framenum)
 	{
+                printf("*****Processing image %d*****\n", i+1);
 		ColorRaw0 = imread(trainTeaI[i]);
+                if (!ColorRaw0.data) { // check if the image has been loaded properly
+                  cout << "Could read file " << trainTeaI[i];
+                  return -1;
+                }
+                printf("this is curious...");
 		Mask0 = imread(trainTeaM[i],0);
+                if (!Mask0.data) { // check if the image has been loaded properly
+                  cout << "Could read file " << trainTeaM[i];
+                  return -1;
+                }
+                printf("this is curious...");
 		buildPyramid(ColorRaw0, ColorPyr, PYRLEVELS);
+                printf("this is curious...");
 		buildPyramid(Mask0,MaskPyr,PYRLEVELS);
+                printf("this is curious...");
 		ColorRaw = ColorPyr[PYRLEVELS];
 		Mask = MaskPyr[PYRLEVELS];
-		imshow("raw",ColorRaw);
+		imshow("raw",ColorRaw);                
 
 		//PROCESS TO GET FEATURES
 		calcHLS.computeColorHLS(ColorRaw,colorfeat,Mask,"train");
 		calcGrad.computeGradients(ColorRaw,gradfeat,Mask,"train");
+                printf("Gradient features computed\n");
 
 		g.visualize_binary_image(gradfeat, Gvis);
 		imshow("GradFeat",Gvis);
