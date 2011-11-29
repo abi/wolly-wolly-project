@@ -226,31 +226,34 @@ int main(int argc, char* argv[]) {
 	{
                 printf("*****Processing image %d*****\n", i+1);
 		ColorRaw0 = imread(trainTeaI[i]);
-                if (!ColorRaw0.data) { // check if the image has been loaded properly
-                  cout << "Could read file " << trainTeaI[i];
+                if( !ColorRaw0.data ){ // check if the image has been loaded properly
+                  cout << "Could not read the file";
                   return -1;
                 }
-                printf("this is curious...");
-		Mask0 = imread(trainTeaM[i],0);
-                if (!Mask0.data) { // check if the image has been loaded properly
-                  cout << "Could read file " << trainTeaM[i];
+                cout << "About to read file" << trainTeaI[i] << " ... " << i << endl;
+		Mask0 = imread(trainTeaM[i], 0);
+		if( !Mask0.data ){ // check if the image has been loaded properly
+                  cout << "Could not read the mask file";
                   return -1;
                 }
-                printf("this is curious...");
-		buildPyramid(ColorRaw0, ColorPyr, PYRLEVELS);
-                printf("this is curious...");
-		buildPyramid(Mask0,MaskPyr,PYRLEVELS);
-                printf("this is curious...");
-		ColorRaw = ColorPyr[PYRLEVELS];
-		Mask = MaskPyr[PYRLEVELS];
-		imshow("raw",ColorRaw);                
-
+                cout << "After reading mask file " << trainTeaM[i] << "... " << i << endl;
+                cout << "Before pyramid .. ... " << endl;
+                buildPyramid(ColorRaw0, ColorPyr, PYRLEVELS);
+                buildPyramid(Mask0,MaskPyr,PYRLEVELS);
+		ColorRaw = ColorRaw0; // ColorPyr[PYRLEVELS];
+		Mask = Mask0; // MaskPyr[PYRLEVELS];
+		cout << "Before showing ... " << endl;
+		imshow("raw",ColorRaw);
+                cout << "After showing ... " << endl;
+                
 		//PROCESS TO GET FEATURES
 		calcHLS.computeColorHLS(ColorRaw,colorfeat,Mask,"train");
 		calcGrad.computeGradients(ColorRaw,gradfeat,Mask,"train");
                 printf("Gradient features computed\n");
 
 		g.visualize_binary_image(gradfeat, Gvis);
+		cout << "After binary ... " << endl;
+        
 		imshow("GradFeat",Gvis);
 		//		calcDepth.computeDepthWTA(DepthRaw, depthfeat, Mask);
 		FeatModes.clear();
