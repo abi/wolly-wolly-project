@@ -196,7 +196,7 @@ void gradients::computeGradients(const cv::Mat &Iin, cv::Mat &Icolorord, const c
   Scharr( RGB[2], grad_y, CV_32F, 0, 1, 1, 0, BORDER_DEFAULT ); //dy
   cartToPolar(grad_x, grad_y, mag2, phase2, true); //True => in degrees not radians
 
-	//COMPUTE RESONABLE THRESHOLDS
+	//COMPUTE REASONABLE THRESHOLDS
 	Scalar mean0,std0,mean1,std1,mean2,std2;
 	meanStdDev(mag0, mean0, std0);
 	meanStdDev(mag1, mean1, std1);

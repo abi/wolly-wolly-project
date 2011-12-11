@@ -204,7 +204,7 @@ mmod_general::mmod_general()
 	 */
 	float mmod_general::match_a_patch_bruteforce(const Mat &I, const Point &p, mmod_features &f, int &match_index)
 	{
-	  GENL_DEBUG_1(cout<<"mmod_general::match_a_patch_bruteforde"<<endl;);
+	  GENL_DEBUG_1(cout<<"mmod_general::match_a_patch_bruteforce"<<endl;);
 		match_index = -1;
 		if(f.features.empty())//Handle edge conditions
 		{

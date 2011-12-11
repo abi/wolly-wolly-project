@@ -55,7 +55,7 @@ using namespace std;
 	//Set up our modes (right now we have color gradients and depth. Below, I just use gradients
 #define PYRLEVELS 2 //How many levels of pyramid reduction
 #define SKIPAMT 8	//SKIP Amount (skipX, skipY)
-//	modesCD.push_back("Color"); 	
+//	modesCD.push_back("Color");
 	modesCD.push_back("Grad");
 	//		modesCD.push_back("Depth");
 	float learn_thresh = 0.97; //Just a guess
