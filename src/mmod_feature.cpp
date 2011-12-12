@@ -127,3 +127,45 @@ mmod_features::mmod_features(string &sID, string &oID)
 			poff.push_back(_poff);
 		}
 	}
+
+/**
+ * \brief Utility function that computes the index in feature vector to be fed into FLANN
+ * given a point offset
+ *
+ */
+int mmod_features::computeFeatureVecIndex(int width, int height, Point &pt) {
+  int row_num = pt.y + height / 2;
+  int col_num = pt.x + width / 2;
+  return (row_num - 1) * width + col_num;
+}
+
+/**
+ * \brief This function creates a FLANN index after all templates are learned
+ *
+ * This function is called to speed up testing later. Assume that the maximum bounding box
+ * is already found and also all templates are already loaded.
+ */
+void mmod_features::constructFlannIndex() {
+  int num_features = features.size();
+  int feature_dim = max_bounds.width * max_bounds.height;
+  Mat M = Mat::zeros(num_features, feature_dim, CV_8U);
+
+  vector<vector<uchar> >::iterator template_feature_it;
+  vector<vector<Point> >::iterator template_offset_it;
+  int i;
+  for (template_feature_it = features.begin(), template_offset_it = offsets.begin(), i = 0; template_feature_it != features.end();
+       ++template_feature_it, ++template_offset_it, i++) {
+    vector<uchar>::iterator feature_it;
+    vector<Point>::iterator offset_it;
+    for (feature_it = (*template_feature_it).begin(), offset_it = (*template_offset_it).begin(); feature_it != (*template_feature_it).end();
+         ++feature_it, ++offset_it) {
+      int index = computeFeatureVecIndex(max_bounds.width, max_bounds.height, (*offset_it));
+      M.at<uchar>(i, index) =  (*feature_it);
+    }
+  }
+  // Parameters into autotunedindexparams can be changed (see doc)
+  flann::AutotunedIndexParams param = flann::AutotunedIndexParams();
+  flann = flann::Index(M, param);
+}
+
+    
