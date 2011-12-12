@@ -15,7 +15,6 @@
 ./data/egg/Image_85.jpg
 ./data/egg/Image_86.jpg
 ./data/egg/Image_87.jpg
-./data/egg/Image_88.jpg
 ./data/egg/Image_89.jpg
 ./data/egg/Image_90.jpg
 ./data/egg/Image_91.jpg

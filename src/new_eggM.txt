@@ -15,7 +15,6 @@
 ./data/egg/Mask_85.jpg
 ./data/egg/Mask_86.jpg
 ./data/egg/Mask_87.jpg
-./data/egg/Mask_88.jpg
 ./data/egg/Mask_89.jpg
 ./data/egg/Mask_90.jpg
 ./data/egg/Mask_91.jpg

@@ -234,10 +234,14 @@ mmod_general::mmod_general()
 		const uchar *atstart = I.ptr<uchar>(0);
 		const uchar *atend = (I.ptr<uchar>(rows - 1)) + cols - 1;
 
+        // TODO(Abi): Why don't this work?
 		GENL_DEBUG_1(
 			static double total_time = 0;
 			static int total_runs = 0;
 		);
+		
+		static double total_time = 0;
+		static int total_runs = 0;
 
 		//FOR FEATURES
 		vector<vector<int> >::iterator pitr;
@@ -265,14 +269,14 @@ mmod_general::mmod_general()
 				for(_pitr = (*pitr).begin(), _fit = (*fit).begin(); _fit != (*fit).end(); ++_pitr, ++_fit)
 				{
 				    GENL_DEBUG_4(
-				    		cout << "*_fit:" << (int)(*_fit) << " at( " << p.y + (*_oit).y << ", " << p.x + (*_oit).x << "), I= " << (int)(I.at<uchar>(p.y + (*_oit).y, p.x + (*_oit).x)) << endl;
+				    		//cout << "*_fit:" << (int)(*_fit) << " at( " << p.y + (*_pitr).y << ", " << p.x + (*_pitr).x << "), I= " << (int)(I.at<uchar>(p.y + (*_pitr).y, p.x + (*_pitr).x)) << endl;
 				    );
 				    int uu = *(at + (*_pitr));//I.at<uchar>(yy,xx);
 				    int bit2byte = lut[*_fit];
 //				    match += (float)(bit2byte & uu);
 					match += matchLUT[bit2byte][uu]; //matchLUT[lut[model_uchar]][test_uchar]
 					GENL_DEBUG_4(
-							cout << "matchLUT = " << matchLUT[lut[*_fit]][I.at<uchar>(p.y + (*_oit).y, p.x + (*_oit).x)] << endl;
+							// cout << "matchLUT = " << matchLUT[lut[*_fit]][I.at<uchar>(p.y + (*_oit).y, p.x + (*_oit).x)] << endl;
 					);
 				}
 				#else //This was an optimization experiment ... that turned out to be slower
@@ -348,18 +352,24 @@ mmod_general::mmod_general()
 #else //This was an optimization experiment ... that turned out to be slower
 		float fmatch = (float)match/((float)norm*100.0);
 #endif
+
 			if(fmatch > maxmatch)
 			{
 				maxmatch = fmatch;
 				match_index = k;
 			}
 			
+            double t;
+            
 			GENL_DEBUG_1(
 				t = (double)getCPUTickCount() - t;
 				total_runs += fit->size();
 				total_time += t;
 			);
 		}//end feature match compute loop
+		
+		
+		
 		GENL_DEBUG_1(
 			if( total_runs > 10000000 )
 			{

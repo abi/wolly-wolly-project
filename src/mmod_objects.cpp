@@ -578,7 +578,7 @@ int mmod_filters::learn_a_template( Mat &Ifeatures,  Mat &Mask, string objname, 
 		return -1; //We require a mask
 	//We're good. Fill up the features class:
 	mmod_features f;
-	cout << "In mmod_filters::Learn a template" << endl;
+	//cout << "In mmod_filters::Learn a template" << endl;
 	int index = util.learn_a_template(Ifeatures, temp, framenum, f);
 	if(ObjViews.count(objname)>0) //We already have this object, add to it
 	{
