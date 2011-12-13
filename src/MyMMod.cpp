@@ -182,7 +182,7 @@ int main(int argc, char* argv[]) {
 //#define ORAMT 8		//How much to spread ORing
 #define SKIPAMT 8	//SKIP Amount (skipX, skipY)
 	float learn_thresh = 0.97; //Just a guess
-	float match_threshold = 0.97; //Total guess
+	float match_threshold = 0.90; //Total guess
 	float frac_overlap = 0.5; //the fraction of overlap between 2 above threshold feature's bounding box rectangles that constitutes "overlap"
 	float cthresh = 0.91; //Color thresh
 
@@ -229,33 +229,32 @@ int main(int argc, char* argv[]) {
 	Mat_<uchar>::iterator c;
 	for(int i = 0; i<trainTeaI.size(); ++i, ++framenum)
 	{
+                printf("*****Processing image %d*****\n", i+1);
 		ColorRaw0 = imread(trainTeaI[i]);
-        // FILE* test = fopen(trainTeaI[i], "rt");
-        // 
-        //      if (!test) {
-        //          cout << "\nCouldn't read the file..." << endl;
-        //          return -1;
-        //      }
-        //      
-        if( !ColorRaw0.data ){ // check if the image has been loaded properly
-            cout << "Could not read the file";
-            return -1;
-        }
+
+                if( !ColorRaw0.data ){ // check if the image has been loaded properly
+                  cout << "Could not read the file";
+                  return -1;
+                }
+                cout << "After reading image file" << trainTeaI[i] << " ... " << i << endl;
 		Mask0 = imread(trainTeaM[i], 0);
 		if( !Mask0.data ){ // check if the image has been loaded properly
-            cout << "Could not read the mask file";
-            return -1;
-        }
-        
-        buildPyramid(ColorRaw0, ColorPyr, PYRLEVELS);
-        buildPyramid(Mask0,MaskPyr,PYRLEVELS);
+                  cout << "Could not read the mask file";
+                  return -1;
+                }
+                cout << "After reading mask file " << trainTeaM[i] << "... " << i << endl;
+                cout << "Before pyramid .. ... " << endl;
+                buildPyramid(ColorRaw0, ColorPyr, PYRLEVELS);
+                buildPyramid(Mask0,MaskPyr,PYRLEVELS);
+		
 		ColorRaw = ColorRaw0; // ColorPyr[PYRLEVELS];
 		Mask = Mask0; // MaskPyr[PYRLEVELS];
 		imshow("raw",ColorRaw);
-        
+
 		//PROCESS TO GET FEATURES
 		calcHLS.computeColorHLS(ColorRaw,colorfeat,Mask,"train");
 		calcGrad.computeGradients(ColorRaw,gradfeat,Mask,"train");
+                printf("Gradient features computed\n");
 
 		g.visualize_binary_image(gradfeat, Gvis);
         
@@ -288,7 +287,17 @@ int main(int argc, char* argv[]) {
 	{
 		DEBUG("1");
 		ColorRaw0 = imread(trainEggI[i]);
-		Mask0 = imread(trainEggM[i],0);
+                if( !ColorRaw0.data ){ // check if the image has been loaded properly
+                  cout << "Could not read the file";
+                  return -1;
+                }
+                cout << "After reading image file" << trainEggI[i] << " ... " << i << endl;
+                Mask0 = imread(trainEggM[i],0);
+                if( !Mask0.data ){ // check if the image has been loaded properly
+                  cout << "Could not read the file";
+                  return -1;
+                }
+                cout << "After reading mask file" << trainEggM[i] << " ... " << i << endl;
 		buildPyramid(ColorRaw0, ColorPyr, PYRLEVELS);
 		buildPyramid(Mask0,MaskPyr,PYRLEVELS);
 		ColorRaw = ColorPyr[PYRLEVELS];
