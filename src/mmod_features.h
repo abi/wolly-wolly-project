@@ -84,6 +84,7 @@ public:
 
     //---Ivan and Abi's code--- Use Flann to see if speed improves//
     cv::flann::Index flann;
+    std::vector<std::vector<int> > perms;
 
 	//---temp--- These were created to optimize feature matching//
 	int wstep;											//Flag to convert offsets from cv::Point to uchar*
@@ -166,6 +167,8 @@ public:
          */
         void constructFlannIndex();
 
+        // Helper functions for constructing flann index and WTA hasing
+        std::vector<std::vector<int> > generatePerms(int m, int k, int dim);
         int computeFeatureVecIndex(int width, int height, cv::Point &pt);
 };
 

@@ -453,6 +453,33 @@ float mmod_general::match_a_patch_flann(const Mat &I, const Point &p, mmod_featu
 
   vector<float> query;
   computeQuery(query, I, p, bbox_width, bbox_height);
+  
+ //  // Modify the query for WTA hashing
+  vector<float> WTAquery;
+  // Constants
+  int K = 100; // hash round truncation size
+  int hash_size = 100; // hash size
+
+  for(int j = 0; j < hash_size; j++){
+	float maxVal = 0;
+	int maxInd;
+	for(int k = 0; k < K; k++){
+		int index = f.perms.at(j).at(k);
+		if(query.at(index) > maxVal){
+			maxVal = query.at(index);
+			maxInd = index;
+		}
+	}
+	WTAquery.push_back(maxInd); 	
+  }
+
+ //  for (int i = 0; i < WTAquery.size(); i++){
+ //  	cout << WTAquery.at(i) << " ";
+ //  }
+
+ //  cout << endl;
+ //  cout << "===========================888888888888>>>>>>>>>>>>" << endl;
+
   flann::SearchParams params = flann::SearchParams();
   vector<int> indices;
   vector<float> dists;

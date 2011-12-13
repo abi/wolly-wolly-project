@@ -186,7 +186,7 @@ void mmod_mode::construct_flann_index() {
 	  if(objs.count(object_ID)>0) //If this object exits already
 	  {
 	    //score = util.match_a_patch_bruteforce(I,pp,objs[object_ID],match_index);
-            score = util.match_a_patch_flann(I, pp, objs[object_ID], match_index);
+        score = util.match_a_patch_flann(I, pp, objs[object_ID], match_index);
 	    R = objs[object_ID].bbox[match_index]; //This is the bounding box of the mask. It needs to be offset by pp:
 	    MODE_DEBUG_2(
 	        cout << "score = " << score << " match_index = " << match_index << endl;

@@ -5,6 +5,7 @@
  *      Author: Gary Bradski
  */
 #include "mmod_features.h"
+#include "algorithm"
 using namespace cv;
 using namespace std;
 
@@ -140,6 +141,26 @@ int mmod_features::computeFeatureVecIndex(int width, int height, Point &pt) {
 }
 
 /**
+ * m is the length of the hash
+*/
+
+vector<vector<int> > mmod_features::generatePerms(int m, int k, int dim){
+	vector<vector<int> > perms;
+	for(int i=0; i < m; i++){
+		vector<int> perm;
+		for(int j=0; j < k; j++){
+		 	int el = rand() % dim;
+			while(count(perm.begin(), perm.end(), el) != 0){
+				el = rand() % dim;
+			}
+			perm.push_back(el);
+		}
+		perms.push_back(perm);
+	}
+	return perms;
+}
+
+/**
  * \brief This function creates a FLANN index after all templates are learned
  *
  * This function is called to speed up testing later. Assume that the maximum bounding box
@@ -200,6 +221,29 @@ void mmod_features::constructFlannIndex() {
     }
   }
 
+  int K = 100; // hash round truncation size
+  int hash_size = 100; // hash size
+  Mat WTA = Mat::zeros(num_features, hash_size, CV_32F);
+  perms = generatePerms(hash_size, K, feature_dim);
+
+  for(int i = 0; i < num_features; i++){
+  	for(int j = 0; j < hash_size; j++){
+  		float maxVal = 0;
+  		int maxInd;
+  		for(int k = 0; k < K; k++){
+  			int index = perms.at(j).at(k);
+  			if(M.at<float>(i, index) > maxVal){
+  				maxVal = M.at<float>(i, index);
+  				maxInd = index;
+  			}
+  		}
+  		WTA.at<float>(i, j) = maxInd; 
+  	}	
+  }
+  
+  	// M.at<float>(i, );
+  	// 
+
   /*cout << "Printing out dimensions of M..." << endl;
   cout << "Width: " << M.cols << " Height: " << M.rows << endl;
   cout << "Printing out features..." << endl;
@@ -210,6 +254,7 @@ void mmod_features::constructFlannIndex() {
 
   // Parameters into autotunedindexparams can be changed (see doc)
   flann::AutotunedIndexParams param = flann::AutotunedIndexParams(0.99, 0.01, 0, 0.1);
+  //flann::LinearIndexParams param = flann::LinearIndexParams();
   flann = flann::Index();
   flann.build(M, param);
 }
