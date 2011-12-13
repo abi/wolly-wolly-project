@@ -27,10 +27,7 @@
 ./data/egg/Image_98.jpg
 ./data/egg/Image_99.jpg
 ./data/egg/Image_100.jpg
-./data/egg/Image_101.jpg
-./data/egg/Image_102.jpg
 ./data/egg/Image_103.jpg
-./data/egg/Image_104.jpg
 ./data/egg/Image_105.jpg
 ./data/egg/Image_106.jpg
 ./data/egg/Image_107.jpg

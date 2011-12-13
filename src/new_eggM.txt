@@ -27,10 +27,7 @@
 ./data/egg/Mask_98.jpg
 ./data/egg/Mask_99.jpg
 ./data/egg/Mask_100.jpg
-./data/egg/Mask_101.jpg
-./data/egg/Mask_102.jpg
 ./data/egg/Mask_103.jpg
-./data/egg/Mask_104.jpg
 ./data/egg/Mask_105.jpg
 ./data/egg/Mask_106.jpg
 ./data/egg/Mask_107.jpg
