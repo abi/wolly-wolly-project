@@ -148,11 +148,12 @@ int mmod_features::computeFeatureVecIndex(int width, int height, Point &pt) {
 void mmod_features::constructFlannIndex() {
   int num_features = features.size();
   int feature_dim = max_bounds.width * max_bounds.height;
-  Mat M = Mat::zeros(num_features, feature_dim, CV_8U);
+  Mat M = Mat::zeros(num_features, feature_dim, CV_32F);
 
   vector<vector<uchar> >::iterator template_feature_it;
   vector<vector<Point> >::iterator template_offset_it;
   int i;
+  
   for (template_feature_it = features.begin(), template_offset_it = offsets.begin(), i = 0; template_feature_it != features.end();
        ++template_feature_it, ++template_offset_it, i++) {
     vector<uchar>::iterator feature_it;
@@ -160,12 +161,57 @@ void mmod_features::constructFlannIndex() {
     for (feature_it = (*template_feature_it).begin(), offset_it = (*template_offset_it).begin(); feature_it != (*template_feature_it).end();
          ++feature_it, ++offset_it) {
       int index = computeFeatureVecIndex(max_bounds.width, max_bounds.height, (*offset_it));
-      M.at<uchar>(i, index) =  (*feature_it);
+      float x;
+      
+      switch((int) *feature_it){
+      	  case 0:
+      	  	x = 0;
+      	  	break;
+		  case 1:
+		  	x = 1;
+		  	break;
+		  case 2:
+		  	x = 2;
+		  	break;
+		  case 4:
+		  	x = 3;
+		  	break;
+		  case 8:
+		  	x = 4;
+		  	break;
+		  case 16:
+		  	x = 5;
+		  	break;
+		  case 32:
+		  	x = 6;
+		  	break;
+		  case 64:
+		  	x = 7;
+		  	break;
+		  case 128:
+		  	x = 8;
+		  	break;
+		  default:
+		  	x = 0;
+      }
+
+      M.at<float>(i, index) =  x;
+
     }
   }
+
+  /*cout << "Printing out dimensions of M..." << endl;
+  cout << "Width: " << M.cols << " Height: " << M.rows << endl;
+  cout << "Printing out features..." << endl;
+  for (int i = 0; i < 200; ++i) {
+    cout << M.at<float>(1, i) << " ";
+  }
+  cout << endl;*/
+
   // Parameters into autotunedindexparams can be changed (see doc)
-  flann::AutotunedIndexParams param = flann::AutotunedIndexParams();
-  flann = flann::Index(M, param);
+  flann::AutotunedIndexParams param = flann::AutotunedIndexParams(0.99, 0.01, 0, 0.1);
+  flann = flann::Index();
+  flann.build(M, param);
 }
 
     

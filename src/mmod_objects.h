@@ -76,6 +76,10 @@ public:
         ar & modes;
     }
 
+    /**
+     *\brief Construct FLANN index for each mmod_mode contained
+     */
+    void construct_flann_index();
 
 	/**
 	 *\brief  Draw matches after a call to match_all_objects. This function is for visualization

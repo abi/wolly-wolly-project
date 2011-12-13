@@ -99,10 +99,12 @@ public:
         ar & objs;
     }
 
+    /**
+     * \brief Construct FLANN index for each mmod_features contained
+     */
+    void construct_flann_index();
 
-
-
-	/**
+    /**
 	 * \brief Learn a template if no other template matches this view of the object well enough.
 	 *
 	 * This is the most common method of learning a template: Only actually learn a template if

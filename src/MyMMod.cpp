@@ -182,7 +182,7 @@ int main(int argc, char* argv[]) {
 //#define ORAMT 8		//How much to spread ORing
 #define SKIPAMT 8	//SKIP Amount (skipX, skipY)
 	float learn_thresh = 0.97; //Just a guess
-	float match_threshold = 0.90; //Total guess
+	float match_threshold = 0.97; //Total guess
 	float frac_overlap = 0.5; //the fraction of overlap between 2 above threshold feature's bounding box rectangles that constitutes "overlap"
 	float cthresh = 0.91; //Color thresh
 
@@ -333,15 +333,21 @@ int main(int argc, char* argv[]) {
 		boost::archive::text_oarchive oa(ofs);
 		oa << filt;
 	}
+        
     // ----
 	mmod_filters filt2("foo");
-    { //Serialize in test
+        { //Serialize in test
     	cout << "Reading models filt.txt in" << endl;
     	std::ifstream ifs("filt.txt");
     	boost::archive::text_iarchive ia(ifs);
         // read class state from archive
     	ia >> filt2;
     }
+
+        // Test is done. Construct FLANN index
+        Objs.construct_flann_index();
+
+
 	///////////////////////////////////////////////////////////////////
 	//TEST (note that you can also match_all_objects_at_a_point(...):
 	///////////////////////////////////////////////////////////////////

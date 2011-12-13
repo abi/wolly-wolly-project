@@ -382,8 +382,247 @@ mmod_general::mmod_general()
 		return maxmatch;
 	}
 
+void mmod_general::computeQuery(vector<float> &query, const Mat &I, const Point &p,
+                                int bbox_width, int bbox_height) {
+  for (int i = 0; i < bbox_width; ++i) {
+    for (int j = 0; j < bbox_height; ++j) {
+      int x = p.x + i + 1 - bbox_width / 2;
+      int y = p.y + j + 1 - bbox_height / 2;
+      if (x < 0 || x >= I.cols || y < 0 || y >= I.rows ){
+          query.push_back(0.0);
+        } else {
+        	float c;
+      
+      		switch((int) I.at<uchar>(y, x)){
+	      	  case 0:
+	      	  	c = 0;
+	      	  	break;
+			  case 1:
+			  	c = 1;
+			  	break;
+			  case 2:
+			  	c = 2;
+			  	break;
+			  case 4:
+			  	c = 3;
+			  	break;
+			  case 8:
+			  	c = 4;
+			  	break;
+			  case 16:
+			  	c = 5;
+			  	break;
+			  case 32:
+			  	c = 6;
+			  	break;
+			  case 64:
+			  	c = 7;
+			  	break;
+			  case 128:
+			  	c = 8;
+			  	break;
+			  default:
+			  	c = 0;
+      		}
+          	
+          	query.push_back(c);
+      }
+    }
+  }
+}  
+        
 
+/**
+ * \brief Use FLANN to speed up matching linemod templates centered on a particular point on the test image
+ * 
+ * This is mainly called in mmod_object::match_all_objects. This method uses FLAN to speed up the matching process.
+ */
+float mmod_general::match_a_patch_flann(const Mat &I, const Point &p, mmod_features &f, int &match_index) {
+  GENL_DEBUG_1(cout << "mmod_general::match_a_patch_flann" << endl;);
 
+  match_index = -1;
+  if (f.features.empty()) { // handle edge cases
+    GENL_DEBUG_2(cout << "In match_a_patch_flann: feature vector passed in is empty" << endl;);
+    return 0.0;
+  }
+
+  // assume that f.constructFlannIndex() is called somewhere else
+  
+  int bbox_width = f.max_bounds.width;
+  int bbox_height = f.max_bounds.height;
+
+  vector<float> query;
+  computeQuery(query, I, p, bbox_width, bbox_height);
+  flann::SearchParams params = flann::SearchParams();
+  vector<int> indices;
+  vector<float> dists;
+
+  //PRECOMPUTE OFFSETS
+  f.convertPoint2PointerOffsets(I); //This is a noop if it is already set. For optimization
+
+  //cout << " KNN " << endl;
+  f.flann.knnSearch(query, indices, dists, (int) ( f.features.size() / 4), params);
+
+  int num_restricted_templates = indices.size();
+  //cout << "Number of restricted templates: " << num_restricted_templates << endl;
+  vector<vector<int> > poff_nearest;
+  vector<Rect> bbox_nearest;
+  vector<vector<uchar> > features_nearest;
+  //cout << "Number of templates: " << f.features.size() << endl;
+  for (int i = 0; i < num_restricted_templates; ++i) {
+  	//cout << indices[i] << endl;
+    poff_nearest.push_back(f.poff.at(indices[i]));
+    bbox_nearest.push_back(f.bbox.at(indices[i]));
+    features_nearest.push_back(f.features.at(indices[i]));
+  }
+
+  // initialize things
+  vector <Rect>::iterator rit; //Rectangle iterator
+  vector <vector<uchar> >::iterator fit; //feature set iterator (each set of features)
+  vector<uchar>::iterator _fit;	//feature vals iterator (within the the current *rit bounding box)
+  int j,k;
+  float maxmatch = 0;
+#ifdef FLOATLUT
+  float match = 0;
+#else
+  int match = 0;
+#endif
+  int norm;
+  int rows = I.rows, cols = I.cols;
+  Rect imgRect(0,0,cols,rows);
+  
+  const uchar *at = (I.ptr<uchar> (p.y)) + p.x;
+  const uchar *atstart = I.ptr<uchar>(0);
+  const uchar *atend = (I.ptr<uchar>(rows - 1)) + cols - 1;
+  
+  GENL_DEBUG_1(
+               static double total_time = 0;
+               static int total_runs = 0;
+               );
+
+  //FOR FEATURES
+  vector<vector<int> >::iterator pitr;
+  vector<int>::iterator _pitr;
+  for(k = 0, pitr = poff_nearest.begin(), rit = bbox_nearest.begin(), 
+        fit = features_nearest.begin();
+      rit != bbox_nearest.end(); ++pitr, ++fit, ++rit, ++k) {
+    GENL_DEBUG_1(double t = (double)getCPUTickCount(););
+    Rect Rpatch(p.x + (*rit).x,p.y + (*rit).y,(*rit).width,(*rit).height);
+    match = 0;
+    norm = 0;
+    GENL_DEBUG_4(
+                 cout << "Len of features: " << (*fit).size() << endl;
+                 );
+    Rect Ri = imgRect & Rpatch; //Intersection between patch and image
+    int Risize = Ri.width * Ri.height;
+    int Rpsize = Rpatch.width * Rpatch.height;
+    if (Risize == Rpsize) {//Intersection between patch and image is the same size at patch
+      //cout << "Good:" << Ri.width << "vs" << Rpatch.width << ", "<< Ri.height<< "vs" << Rpatch.height << endl;
+      GENL_DEBUG_4(cout << "NO BOUNDS CHECK NEEDED" << endl;);
+#if 1
+      norm = (int)fit->size();
+      for (_pitr = (*pitr).begin(), _fit = (*fit).begin(); _fit != (*fit).end(); ++_pitr, ++_fit) {
+        GENL_DEBUG_4(
+                     cout << "*_fit:" << (int)(*_fit) << " at( " << p.y + (*_oit).y << ", " << p.x + (*_oit).x << "), I= " << (int)(I.at<uchar>(p.y + (*_oit).y, p.x + (*_oit).x)) << endl;
+                     );
+        int uu = *(at + (*_pitr));//I.at<uchar>(yy,xx);
+        int bit2byte = lut[*_fit];
+        // match += (float)(bit2byte & uu);
+        match += matchLUT[bit2byte][uu]; //matchLUT[lut[model_uchar]][test_uchar]
+        GENL_DEBUG_4(
+                     cout << "matchLUT = " << matchLUT[lut[*_fit]][I.at<uchar>(p.y + (*_oit).y, p.x + (*_oit).x)] << endl;
+                     );
+      }
+#else //This was an optimization experiment ... that turned out to be slower
+      const uchar* fit_base = &(*fit)[0];
+      const int* pitr_base = &(*pitr)[0];
+      int i, n = (int)fit->size();
+      norm += n;
+      for(i = 0; i < n; i++, fit_base++, pitr_base++) {
+        GENL_DEBUG_4(
+                     cout << "*_fit:" << (int)(*_fit) << " at( " << p.y + (*_oit).y << ", " << p.x + (*_oit).x << "), I= " << (int)(I.at<uchar>(p.y + (*_oit).y, p.x + (*_oit).x)) << endl;
+                     );
+        int uu = at[*pitr_base];// I.at<uchar>(yy,xx);
+        int bit2byte = lut[*fit_base];
+        // match += (float)(bit2byte & uu);
+        match += matchLUT[bit2byte][uu]; //matchLUT[lut[model_uchar]][test_uchar]
+        GENL_DEBUG_4(
+                     cout << "matchLUT = " << matchLUT[lut[*_fit]][I.at<uchar>(p.y + (*_oit).y, p.x + (*_oit).x)] << endl;
+                     );
+      }
+#endif
+    } else {//bounds checking needed
+      if(Risize < (int)(Rpsize * 0.7)) {//Don't try to match too small of areas at the edge
+        norm = 1; match = 0;
+      } else {
+        // cout << "Bad:" << Ri.width << "vs" << Rpatch.width << ", "<< Ri.height<< "vs" << Rpatch.height << endl;
+#if 1
+        GENL_DEBUG_4(cout << "BOUNDS CHECKING NEEDED" << endl;);
+        for (_pitr = (*pitr).begin(), _fit = (*fit).begin(); 
+             _fit != (*fit).end(); ++_pitr, ++_fit) {
+          const uchar *get = at + (*_pitr);
+          if ((get < atstart)||(get > atend)) continue;
+          int uu = *get;
+          int bit2byte = lut[*_fit];
+          // match += (float)(bit2byte & uu);
+          // match += mlut_base[(int)bit2byte][(int)uu];
+          match += matchLUT[bit2byte][uu]; //matchLUT[lut[model_uchar]][test_uchar]
+          ++norm;
+        }
+#else //This was an optimization experiment ... that turned out to be slower
+        const uchar* fit_base = &(*fit)[0];
+        const int* pitr_base = &(*pitr)[0];
+        int i, n = (int)fit->size();
+        for(i = 0; i < n; i++, fit_base++, pitr_base++) {
+          GENL_DEBUG_4(
+                       cout << "*_fit:" << (int)(*_fit) << " at( " << p.y + (*_oit).y << ", " << p.x + (*_oit).x << "), I= " << (int)(I.at<uchar>(p.y + (*_oit).y, p.x + (*_oit).x)) << endl;
+                       );
+          const uchar *get = at + (*pitr_base);
+          if ((get < atstart)||(get > atend)) continue;
+          int uu = *get; // I.at<uchar>(yy,xx);
+          int bit2byte = lut[*fit_base];
+          // match += (float)(bit2byte & uu);
+          match += matchLUT[bit2byte][uu]; // matchLUT[lut[model_uchar]][test_uchar]
+          GENL_DEBUG_4(
+                       cout << "matchLUT = " << matchLUT[lut[*_fit]][I.at<uchar>(p.y + (*_oit).y, p.x + (*_oit).x)] << endl;
+                       );
+          norm++;
+        }
+#endif
+      }
+    } // end else if bounds checking
+    GENL_DEBUG_4(cout << "norm in g:match_a_patch = " << norm << endl;);
+    if(0 == norm) norm = 1;
+    // fmatch = (float)match/((float)norm*100.0);
+#ifdef FLOATLUT
+    float fmatch = match/(float)norm;
+#else //This was an optimization experiment ... that turned out to be slower
+    float fmatch = (float)match/((float)norm*100.0);
+#endif
+    if(fmatch > maxmatch) {
+      maxmatch = fmatch;
+      match_index = k;
+    }
+    
+    GENL_DEBUG_1(
+                 t = (double)getCPUTickCount() - t;
+                 total_runs += fit->size();
+                 total_time += t;
+                 );
+  } // end feature match compute loop
+  GENL_DEBUG_1(
+               if(total_runs > 10000000) {
+                 printf("avg time = %g\n", total_time/total_runs );
+                 total_time = 0;
+                 total_runs = 0;
+               }
+               );
+  GENL_DEBUG_2(cout << "Max match = "<<maxmatch<<" norm="<<norm<<endl;);
+  return maxmatch;
+}
+
+  
+    
 
 	/**
 	 * \brief Brute force match a linemod filter template at (centered on) a particular point in an image
@@ -1115,8 +1354,3 @@ mmod_general::mmod_general()
 	    }
 	    return true_positives;
 	}
-
-
-
-
-

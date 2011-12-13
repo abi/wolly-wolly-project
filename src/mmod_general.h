@@ -127,7 +127,17 @@ public:
 	 * @return				score of maximal match. If f is empty, return 0 (nothing matches)
 	 */
 	float match_a_patch_bruteforce(const cv::Mat &I, const cv::Point &p, mmod_features &f, int &match_index);
-
+        
+        // Utility function
+        void computeQuery(std::vector<float> &query, const cv::Mat &I, const cv::Point &p,
+                          int bbox_width, int bbox_height);
+        /**
+         * \brief Use FLANN to speed up matching linemod templates centered on a particular point on the test image
+         * 
+         * This is mainly called in mmod_object::match_all_objects. This method uses FLAN to speed up the matching process.
+         */
+        float match_a_patch_flann(const cv::Mat &I, const cv::Point &p, 
+                                  mmod_features &f, int &match_index);
 
 	/**
 	 * \brief Brute force match a linemod filter template at (centered on) a particular point in an image

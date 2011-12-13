@@ -49,6 +49,15 @@ mmod_mode::mmod_mode(const string &mode_name)
 		return i;
 	}
 
+/**
+ * \brief Construct FLANN index for each mmod_features contained
+ */
+void mmod_mode::construct_flann_index() {
+  ObjectModels::iterator feat_it;
+  for (feat_it = objs.begin(); feat_it != objs.end(); ++feat_it) {
+    feat_it->second.constructFlannIndex();
+  }
+}
 
 	/**
 	 * \brief Learn a template if no other template matches this view of the object well enough.
@@ -176,7 +185,8 @@ mmod_mode::mmod_mode(const string &mode_name)
 	  float score = 0.0;
 	  if(objs.count(object_ID)>0) //If this object exits already
 	  {
-	    score = util.match_a_patch_bruteforce(I,pp,objs[object_ID],match_index);
+	    //score = util.match_a_patch_bruteforce(I,pp,objs[object_ID],match_index);
+            score = util.match_a_patch_flann(I, pp, objs[object_ID], match_index);
 	    R = objs[object_ID].bbox[match_index]; //This is the bounding box of the mask. It needs to be offset by pp:
 	    MODE_DEBUG_2(
 	        cout << "score = " << score << " match_index = " << match_index << endl;
