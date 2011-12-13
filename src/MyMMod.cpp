@@ -205,7 +205,7 @@ int main(int argc, char* argv[]) {
 	vector<string> trainEggI,trainEggM,testEggI,testEggM;
 	for(int i = 0; i<filelistIegg.size(); ++i)
 	{
-		if(!i%4)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ) //Train
+		if(i%4) //Train
 		{
 			trainEggI.push_back(filelistIegg[i]);
 			trainEggM.push_back(filelistMegg[i]);
