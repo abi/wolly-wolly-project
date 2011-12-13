@@ -41,20 +41,47 @@ Stanford University\\
 \maketitle
 \thispagestyle{empty}
 
-%%%%%%%%% BODY TEXT
-
-\section{Abstract}
-
-It should not be more than 300 words. The whole thing should be 8 pages.
+%%%%%%%%% ABSTRACT
+\begin{abstract}}
+    We explore several extension to the LINE-MOD detection and object
+    recognition algorithm (add reference) to further improve upon its
+    speed, scalability and invariance properties. More specifically,
+    we use the Winner Take All (WTA) algorithm (add reference) to
+    speed up the template matching process by reducing the template
+    feature vectors into lower dimensional hashes and by using an
+    approximate nearest neighbor approach to limit our template search
+    space. In addition, we explore the use of depth image to make
+    LINE-Mod detection scale invariant. Finally, we compare the
+    performance and speed of WTA hashing with the more traditional
+    K-means clustering.
+\end{abstract}}
 
 \section{Introduction}
+Real-time object detection This problem is interesting because of its
+various applications in robotics. A good real-time object recognition
+algorithm would enable robots to perform complex tasks such as
+identifying mugs in the close vicinity in heavily occluded scenarios
+and fetching it for the human user. In particular, our goal with this
+project is to make an existing template matching algorithm, LINE-MOD,
+faster and more scalable.
 
-this section introduces your problem, and the overall plan for approaching your problem
 
-We will be investigating general, real-time object recognition. This problem is interesting because of its various applications in robotics. A good real-time object recognition algorithm would enable robots to perform complex tasks such as identifying mugs in the close vicinity in heavily occluded scenarios and fetching it for the human user. In particular, our goal with this project is to make an existing template matching algorithm, LINE-MOD, faster and more scalable.
+Focus on problem with template matching in general. Don't discuss
+specifics of LINE-MOD too much.
 
-\section{Problem Statement}
+Problem is one of efficiency, speed. 
 
+
+Why is it slow?
+
+3 paragraphs. Copy a lot from old reports. 
+
+* Discuss the different possible approaches to this problem.
+
+Making the templates smaller
+Or doing comparisons with fewer templates
+
+Template matching papers 
 
 This section discusses relevant literature for your project
 
@@ -70,7 +97,26 @@ The exact method of combination is described in greater detail in the next secti
 
 Since our algorithm produces visual results, qualitatively we can evaluate our algorithm by observing how well it performs the recognition task on various image data. We will also use standard quantitative methods to evaluate our results, such as constructing the precision and recall curves when the system identifies various objects. To resolve the ambiguity involved with a “correct” result, we deﬁne a recognition to be correct if the bounding box overlaps at least 50% with the bounding box a reasonable human would use to bound the object, i.e. the “hard truth”.
 
+
+\section{Background/Related Work}
+
+Focus just on paper, not on Bradski's implementation of the paper.
+LINE-MOD
+
+Basic features
+Similarity measure
+
+Compact 8-bit representation
+
+Implementation details?
+
+Template matching 
+
 \section{Approach}
+
+Describe the basics of Bradski implementation.
+
+Derivative work.
 
 This section details the framework of your project. Be specific, which means you might want to include equations, figures, plots, etc
 
@@ -92,12 +138,32 @@ Once we had a reasonable amount of familiarity with the existing code, we began 
 
 Going forward, the first and most important goal is to get an initial set of test results and compare the recognition results and speed of our combined algorithm with that of LINE-MOD. Once we are able to test that, we will explore other potentially interesting changes that we might be able to make (e.g. combining modalities vs. treating them separate when generating feature vectors with WTA hashing). We have yet to decide what the best approach to do matching would be (similarly measure vs. FLANN or something else). We plan experimenting with a variety of different algorithms here. We also anticipate having to vary the parameters (the length of the feature vectors and the k in the hashing algorithm) in order to get decent results.
 
-\section{Introduction}
-
-
 \section{Experiment}
 
 This section begins with what kind of experiments you're doing, what kind of dataset(s) you're using, and what is the way you measure or evaluate your results. It then shows in details the results of your experiments. By details, I mean both quantitative evaluations (show numbers, figures, tables, etc) as well as qualitative results (show images, example results, etc).
+
+
+Experimental setup
+
+Description of the dataset that we have from Bradski. 
+
+Using depth features?
+
+Results
+
+for various stages in our implementation
+
+No hashing, raw image vector fed into FLANN
+
+RESULTS GO HERE
+
+discussion of raw image vectors failing. Suggesting improvements.
+
+WTA hashing 
+
+Varying k and m for WTA hashing
+
+Discussion of WTA hashing perforamce. Suggesting improvements.
 
 \section{Conclusion}
 
