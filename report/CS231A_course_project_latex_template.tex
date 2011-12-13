@@ -43,20 +43,11 @@ Stanford University\\
 
 %%%%%%%%% BODY TEXT
 
-\section{Abstract}
-
-It should not be more than 300 words. The whole thing should be 8 pages.
-
 \section{Introduction}
-
-this section introduces your problem, and the overall plan for approaching your problem
 
 We will be investigating general, real-time object recognition. This problem is interesting because of its various applications in robotics. A good real-time object recognition algorithm would enable robots to perform complex tasks such as identifying mugs in the close vicinity in heavily occluded scenarios and fetching it for the human user. In particular, our goal with this project is to make an existing template matching algorithm, LINE-MOD, faster and more scalable.
 
 \section{Problem Statement}
-
-
-This section discusses relevant literature for your project
 
 The algorithm that we are working on involves the combination of two existing techniques: (1) “Linemod”, a template matching technique that allows for extremely fast recognition based on extracting features from multiple modalities and generating response maps to a test image, and (2) “Winner take all”, a hashing algorithm that has proven quite useful in generating better results for a wide variety of similarity searches in higher dimensions including matching local feature descriptors.
 
@@ -70,9 +61,7 @@ The exact method of combination is described in greater detail in the next secti
 
 Since our algorithm produces visual results, qualitatively we can evaluate our algorithm by observing how well it performs the recognition task on various image data. We will also use standard quantitative methods to evaluate our results, such as constructing the precision and recall curves when the system identifies various objects. To resolve the ambiguity involved with a “correct” result, we deﬁne a recognition to be correct if the bounding box overlaps at least 50% with the bounding box a reasonable human would use to bound the object, i.e. the “hard truth”.
 
-\section{Approach}
-
-This section details the framework of your project. Be specific, which means you might want to include equations, figures, plots, etc
+\section{Technical Approach}
 
 We are currently following the approach proposed by Dr. Bradski which is to extract constant-size feature vectors from all the available templates for a particular object.
 
@@ -91,23 +80,5 @@ Another component of this project is the existing implementation of the LINE-MOD
 Once we had a reasonable amount of familiarity with the existing code, we began implementing the enhancements proposed in the previous section. The implementation of the WTA hash itself is only a few lines of C++ and turned out to be quite straightforward. However, combining this step with the existing codebase proved to be much harder. We started implementing the random generation of LINE-MOD features. However, it's still too early to test because we haven't completely integrated the generation of the feature vectors with the rest of the codebase (we have to extend the existing Objects class to support feature vector comparison and create new match functions for our modified version of the algorithm). This is mostly a matter of coding further and takes a while due to the complexity of the project (5000+ lines of C++ code).
 
 Going forward, the first and most important goal is to get an initial set of test results and compare the recognition results and speed of our combined algorithm with that of LINE-MOD. Once we are able to test that, we will explore other potentially interesting changes that we might be able to make (e.g. combining modalities vs. treating them separate when generating feature vectors with WTA hashing). We have yet to decide what the best approach to do matching would be (similarly measure vs. FLANN or something else). We plan experimenting with a variety of different algorithms here. We also anticipate having to vary the parameters (the length of the feature vectors and the k in the hashing algorithm) in order to get decent results.
-
-\section{Introduction}
-
-
-\section{Experiment}
-
-This section begins with what kind of experiments you're doing, what kind of dataset(s) you're using, and what is the way you measure or evaluate your results. It then shows in details the results of your experiments. By details, I mean both quantitative evaluations (show numbers, figures, tables, etc) as well as qualitative results (show images, example results, etc).
-
-\section{Conclusion}
-
-What have you learned? Suggest future ideas.
-
-\section{References}
-
-This is absolutely necessary. Reports without references will not receive a score higher than 20 points (total is 40 points).
-
-\section{Supplementary materials}
-
 
 \end{document}
