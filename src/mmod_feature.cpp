@@ -221,8 +221,8 @@ void mmod_features::constructFlannIndex() {
     }
   }
 
-  int K = 100; // hash round truncation size
-  int hash_size = 100; // hash size
+  int K = 10; // hash round truncation size
+  int hash_size = 200; // hash size
   Mat WTA = Mat::zeros(num_features, hash_size, CV_32F);
   perms = generatePerms(hash_size, K, feature_dim);
 
@@ -240,7 +240,7 @@ void mmod_features::constructFlannIndex() {
   		WTA.at<float>(i, j) = maxInd; 
   	}	
   }
-  
+
   	// M.at<float>(i, );
   	// 
 
@@ -253,7 +253,7 @@ void mmod_features::constructFlannIndex() {
   cout << endl;*/
 
   // Parameters into autotunedindexparams can be changed (see doc)
-  flann::AutotunedIndexParams param = flann::AutotunedIndexParams(0.99, 0.01, 0, 0.1);
+  flann::AutotunedIndexParams param = flann::AutotunedIndexParams(0.95, 0.01, 0, 0.1);
   //flann::LinearIndexParams param = flann::LinearIndexParams();
   flann = flann::Index();
   flann.build(M, param);

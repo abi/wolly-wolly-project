@@ -190,7 +190,7 @@ int main(int argc, char* argv[]) {
 	vector<string> trainTeaI,trainTeaM,testTeaI,testTeaM;
 	for(int i = 0; i<filelistItea.size(); ++i)
 	{
-		if(!(i%4)) //Train
+		if(!i%4) //Train
 		{
 			trainTeaI.push_back(filelistItea[i]);
 			trainTeaM.push_back(filelistMtea[i]);
@@ -205,7 +205,7 @@ int main(int argc, char* argv[]) {
 	vector<string> trainEggI,trainEggM,testEggI,testEggM;
 	for(int i = 0; i<filelistIegg.size(); ++i)
 	{
-		if(!(i%4)) //Train
+		if(!i%4)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ) //Train
 		{
 			trainEggI.push_back(filelistIegg[i]);
 			trainEggM.push_back(filelistMegg[i]);
@@ -233,13 +233,15 @@ int main(int argc, char* argv[]) {
 
                 if( !ColorRaw0.data ){ // check if the image has been loaded properly
                   cout << "Could not read the file";
-                  return -1;
+                  //return -1;
+                  break;
                 }
                 cout << "After reading image file" << trainTeaI[i] << " ... " << i << endl;
 		Mask0 = imread(trainTeaM[i], 0);
 		if( !Mask0.data ){ // check if the image has been loaded properly
                   cout << "Could not read the mask file";
-                  return -1;
+                  //return -1;
+                  break;
                 }
                 cout << "After reading mask file " << trainTeaM[i] << "... " << i << endl;
                 cout << "Before pyramid .. ... " << endl;
@@ -286,13 +288,15 @@ int main(int argc, char* argv[]) {
 		ColorRaw0 = imread(trainEggI[i]);
                 if( !ColorRaw0.data ){ // check if the image has been loaded properly
                   cout << "Could not read the file";
-                  return -1;
+                  //return -1;
+                  break;
                 }
                 cout << "After reading image file" << trainEggI[i] << " ... " << i << endl;
                 Mask0 = imread(trainEggM[i],0);
                 if( !Mask0.data ){ // check if the image has been loaded properly
-                  cout << "Could not read the file";
-                  return -1;
+                  cout << "Could not read mask file";
+                  //return -1;
+                  break;
                 }
                 cout << "After reading mask file" << trainEggM[i] << " ... " << i << endl;
 		buildPyramid(ColorRaw0, ColorPyr, PYRLEVELS);

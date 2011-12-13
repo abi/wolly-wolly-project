@@ -457,8 +457,8 @@ float mmod_general::match_a_patch_flann(const Mat &I, const Point &p, mmod_featu
  //  // Modify the query for WTA hashing
   vector<float> WTAquery;
   // Constants
-  int K = 100; // hash round truncation size
-  int hash_size = 100; // hash size
+  int K = 10; // hash round truncation size
+  int hash_size = 200; // hash size
 
   for(int j = 0; j < hash_size; j++){
 	float maxVal = 0;
@@ -488,7 +488,7 @@ float mmod_general::match_a_patch_flann(const Mat &I, const Point &p, mmod_featu
   f.convertPoint2PointerOffsets(I); //This is a noop if it is already set. For optimization
 
   // Add 1 because passing in 0 into OpenCV throws a weird error
-  int knn = ( (int) (f.features.size() / 4) ) + 1;
+  int knn = ( (int) (f.features.size() / 2) ) + 1;
   f.flann.knnSearch(query, indices, dists, knn, params);
 
   int num_restricted_templates = indices.size();
