@@ -207,7 +207,6 @@ int main(int argc, char* argv[]) {
 	{
 		if(!(i%4)) //Train
 		{
-			DEBUG(filelistIegg[i]);
 			trainEggI.push_back(filelistIegg[i]);
 			trainEggM.push_back(filelistMegg[i]);
 		}
@@ -247,9 +246,8 @@ int main(int argc, char* argv[]) {
                 buildPyramid(ColorRaw0, ColorPyr, PYRLEVELS);
                 buildPyramid(Mask0,MaskPyr,PYRLEVELS);
 		
-		ColorRaw = ColorRaw0; // ColorPyr[PYRLEVELS];
-		Mask = Mask0; // MaskPyr[PYRLEVELS];
-		imshow("raw",ColorRaw);
+		ColorRaw = ColorPyr[PYRLEVELS];
+		Mask = MaskPyr[PYRLEVELS];
 
 		//PROCESS TO GET FEATURES
 		calcHLS.computeColorHLS(ColorRaw,colorfeat,Mask,"train");
@@ -285,7 +283,6 @@ int main(int argc, char* argv[]) {
 	SessionID = "Ses1"; ObjectName = "Egg";  //Fill these in.
 	for(int i = 0; i<trainTeaI.size(); ++i, ++framenum)
 	{
-		DEBUG("1");
 		ColorRaw0 = imread(trainEggI[i]);
                 if( !ColorRaw0.data ){ // check if the image has been loaded properly
                   cout << "Could not read the file";
@@ -302,9 +299,7 @@ int main(int argc, char* argv[]) {
 		buildPyramid(Mask0,MaskPyr,PYRLEVELS);
 		ColorRaw = ColorPyr[PYRLEVELS];
 		Mask = MaskPyr[PYRLEVELS];
-		imshow("raw",ColorRaw);
 
-		DEBUG("YOYOO");
 		//PROCESS TO GET FEATURES
 		colorfeat= Scalar::all(0);
 		calcHLS.computeColorHLS(ColorRaw,colorfeat,Mask,"train");
@@ -313,7 +308,6 @@ int main(int argc, char* argv[]) {
 		g.visualize_binary_image(gradfeat, Gvis);
 		imshow("GradFeat",Gvis);
 
-		DEBUG("2");
 		//		calcDepth.computeDepthWTA(DepthRaw, depthfeat, Mask);
 		FeatModes.clear();
 		FeatModes.push_back(gradfeat);
@@ -328,17 +322,9 @@ int main(int argc, char* argv[]) {
 		cout << "Filter egg templates = " << num_fs << endl;
 		imshow("raw",ColorRaw);
 		//	cm.computeColorOrder(cimage,Ibin,M);
-		DEBUG("3");
 		g.visualize_binary_image(colorfeat,Ivis);
-		DEBUG("4");
 		imshow("ColorFeat",Ivis);
-		DEBUG("5");
-		// ABI
-		//cout << "Hit any key to continue" << endl;
-		//waitKey(3);
 	}
-
-	DEBUG("DONE");
 	
 //	filt.update_viewindex(); //Update the framenum => view index map.
 	{ //Serialize out test
@@ -373,12 +359,9 @@ int main(int argc, char* argv[]) {
 	string currentObj;
 	Rect MaskRect;
 
-	DEBUG("HHH");
-
 	CALLGRIND_START_INSTRUMENTATION;
 	for(int i = 0; i<teasize+eggsize; ++i)
 	{
-		DEBUG("BOOST");
 		if(i<teasize)
 		{
 			ColorRaw0 = imread(testTeaI[i]);
@@ -398,10 +381,6 @@ int main(int argc, char* argv[]) {
 			Mask = MaskPyr[PYRLEVELS];
 			currentObj = "Egg";
 		}
-		imshow("raw",ColorRaw);
-
-		DEBUG("Basd");
-		
 		calcHLS.computeColorHLS(ColorRaw,colorfeat,noMask);
 		calcGrad.computeGradients(ColorRaw,gradfeat,noMask);
 		g.visualize_binary_image(colorfeat,Ivis);
@@ -422,8 +401,6 @@ int main(int argc, char* argv[]) {
 
 		//DO POST FILTER CHECKS
 		filt2.filter_object_recognitions(colorfeat,Objs,cthresh);
-
-		DEBUG("WAR");
 
 		int reclen = (int)Objs.rv.size();
 		vector<string>::iterator nit = Objs.ids.begin();
