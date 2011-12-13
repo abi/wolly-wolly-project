@@ -148,7 +148,7 @@ int mmod_features::computeFeatureVecIndex(int width, int height, Point &pt) {
 void mmod_features::constructFlannIndex() {
   int num_features = features.size();
   int feature_dim = max_bounds.width * max_bounds.height;
-  Mat M = Mat::zeros(num_features, feature_dim, CV_8U);
+  Mat M = Mat::zeros(num_features, feature_dim, CV_32F);
 
   vector<vector<uchar> >::iterator template_feature_it;
   vector<vector<Point> >::iterator template_offset_it;
@@ -160,7 +160,7 @@ void mmod_features::constructFlannIndex() {
     for (feature_it = (*template_feature_it).begin(), offset_it = (*template_offset_it).begin(); feature_it != (*template_feature_it).end();
          ++feature_it, ++offset_it) {
       int index = computeFeatureVecIndex(max_bounds.width, max_bounds.height, (*offset_it));
-      M.at<uchar>(i, index) =  (*feature_it);
+      M.at<uchar>(i, index) =  (float)(*feature_it);
     }
   }
   // Parameters into autotunedindexparams can be changed (see doc)

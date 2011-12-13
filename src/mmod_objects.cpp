@@ -16,6 +16,16 @@ using namespace std;
  */
 
 /**
+ *\brief Construct FLANN index for each mmod_mode contained
+ */
+void mmod_objects::construct_flann_index() {
+  ModelsForModes::iterator mode_it;
+  for (mode_it = modes.begin(); mode_it != modes.end(); ++mode_it) {
+    mode_it->second.construct_flann_index();
+  }
+}
+
+/**
  * \brief Empty all vectors.
  */
 void
