@@ -391,7 +391,41 @@ void mmod_general::computeQuery(vector<float> &query, const Mat &I, const Point 
       if (x < 0 || x >= I.cols || y < 0 || y >= I.rows ){
           query.push_back(0.0);
         } else {
-          query.push_back(I.at<uchar>(y, x));
+        	float c;
+      
+      		switch((int) I.at<uchar>(y, x)){
+	      	  case 0:
+	      	  	c = 0;
+	      	  	break;
+			  case 1:
+			  	c = 1;
+			  	break;
+			  case 2:
+			  	c = 2;
+			  	break;
+			  case 4:
+			  	c = 3;
+			  	break;
+			  case 8:
+			  	c = 4;
+			  	break;
+			  case 16:
+			  	c = 5;
+			  	break;
+			  case 32:
+			  	c = 6;
+			  	break;
+			  case 64:
+			  	c = 7;
+			  	break;
+			  case 128:
+			  	c = 8;
+			  	break;
+			  default:
+			  	c = 0;
+      		}
+          	
+          	query.push_back(c);
       }
     }
   }
@@ -422,13 +456,21 @@ float mmod_general::match_a_patch_flann(const Mat &I, const Point &p, mmod_featu
   flann::SearchParams params = flann::SearchParams();
   vector<int> indices;
   vector<float> dists;
-  f.flann.knnSearch(query, indices, dists, f.features.size() / 4, params);
+
+  //PRECOMPUTE OFFSETS
+  f.convertPoint2PointerOffsets(I); //This is a noop if it is already set. For optimization
+
+  //cout << " KNN " << endl;
+  f.flann.knnSearch(query, indices, dists, (int) ( f.features.size() / 4), params);
 
   int num_restricted_templates = indices.size();
+  //cout << "Number of restricted templates: " << num_restricted_templates << endl;
   vector<vector<int> > poff_nearest;
   vector<Rect> bbox_nearest;
   vector<vector<uchar> > features_nearest;
+  //cout << "Number of templates: " << f.features.size() << endl;
   for (int i = 0; i < num_restricted_templates; ++i) {
+  	//cout << indices[i] << endl;
     poff_nearest.push_back(f.poff.at(indices[i]));
     bbox_nearest.push_back(f.bbox.at(indices[i]));
     features_nearest.push_back(f.features.at(indices[i]));
@@ -449,8 +491,6 @@ float mmod_general::match_a_patch_flann(const Mat &I, const Point &p, mmod_featu
   int rows = I.rows, cols = I.cols;
   Rect imgRect(0,0,cols,rows);
   
-  //PRECOMPUTE OFFSETS
-  f.convertPoint2PointerOffsets(I); //This is a noop if it is already set. For optimization
   const uchar *at = (I.ptr<uchar> (p.y)) + p.x;
   const uchar *atstart = I.ptr<uchar>(0);
   const uchar *atend = (I.ptr<uchar>(rows - 1)) + cols - 1;
@@ -465,7 +505,7 @@ float mmod_general::match_a_patch_flann(const Mat &I, const Point &p, mmod_featu
   vector<int>::iterator _pitr;
   for(k = 0, pitr = poff_nearest.begin(), rit = bbox_nearest.begin(), 
         fit = features_nearest.begin();
-      rit != f.bbox.end(); ++pitr, ++fit, ++rit, ++k) {
+      rit != bbox_nearest.end(); ++pitr, ++fit, ++rit, ++k) {
     GENL_DEBUG_1(double t = (double)getCPUTickCount(););
     Rect Rpatch(p.x + (*rit).x,p.y + (*rit).y,(*rit).width,(*rit).height);
     match = 0;
@@ -1314,8 +1354,3 @@ float mmod_general::match_a_patch_flann(const Mat &I, const Point &p, mmod_featu
 	    }
 	    return true_positives;
 	}
-
-
-
-
-

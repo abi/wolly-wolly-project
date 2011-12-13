@@ -343,8 +343,10 @@ int main(int argc, char* argv[]) {
         // read class state from archive
     	ia >> filt2;
     }
+
         // Test is done. Construct FLANN index
         Objs.construct_flann_index();
+
 
 	///////////////////////////////////////////////////////////////////
 	//TEST (note that you can also match_all_objects_at_a_point(...):
