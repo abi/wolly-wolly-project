@@ -460,8 +460,9 @@ float mmod_general::match_a_patch_flann(const Mat &I, const Point &p, mmod_featu
   //PRECOMPUTE OFFSETS
   f.convertPoint2PointerOffsets(I); //This is a noop if it is already set. For optimization
 
-  //cout << " KNN " << endl;
-  f.flann.knnSearch(query, indices, dists, (int) ( f.features.size() / 4), params);
+  // Add 1 because passing in 0 into OpenCV throws a weird error
+  int knn = ( (int) (f.features.size() / 4) ) + 1;
+  f.flann.knnSearch(query, indices, dists, knn, params);
 
   int num_restricted_templates = indices.size();
   //cout << "Number of restricted templates: " << num_restricted_templates << endl;
