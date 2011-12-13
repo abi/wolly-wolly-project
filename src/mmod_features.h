@@ -82,8 +82,8 @@ public:
 	std::vector<std::vector<int> > quadUL,quadUR,quadLL,quadLR;//List of features in each quadrant
 	cv::Rect max_bounds;								//This rectangle contains the maximum width and and height spanned by all the bbox rectangles
 
-        //---Ivan and Abi's code--- Use Flann to see if speed improves//
-        cv::flann::Index flann;
+    //---Ivan and Abi's code--- Use Flann to see if speed improves//
+    cv::flann::Index flann;
 
 	//---temp--- These were created to optimize feature matching//
 	int wstep;											//Flag to convert offsets from cv::Point to uchar*

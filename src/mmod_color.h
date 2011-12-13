@@ -17,7 +17,7 @@
   //VERBOSE
   // 1 Routine list, 2 values out, 3 internal values outside of loops, 4 intenral values in loops
   #define CALCFEAT_VERBOSE 0
-
+    
   #if CALCFEAT_VERBOSE >= 1
   #define CALCFEAT_DEBUG_1(X) do{CALCFEAT_SHOW() X }while(false)
   #else

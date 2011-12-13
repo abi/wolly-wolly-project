@@ -138,7 +138,7 @@ void mmod_mode::construct_flann_index() {
 	    }
 	    if(Score) *Score = score; //Let user see the patch match score
 	    MODE_DEBUG_2(
-    	    cout << "frame#"<<framenum<<" mmod_mode::learn_a_template("<<object_ID<<", "<<match_index<<"), match a patch score " << score <<<<endl;
+    	    cout << "frame#"<<framenum<<" mmod_mode::learn_a_template("<<object_ID<<", "<<match_index<<"), match a patch score " << score << endl;
 	        cout << object_ID << " at match_index = " << match_index << ", score from bfm = " << score << " learn_thresh = " << learn_thresh << endl;
 	    );
 	    if(score <= learn_thresh) //We don't already have a good score for this object

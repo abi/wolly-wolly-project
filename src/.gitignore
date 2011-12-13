@@ -6,3 +6,9 @@ data
 
 # Binaries
 match
+
+# Data output files
+filt.txt
+
+# Temp and trash files that ought not be committed
+trash

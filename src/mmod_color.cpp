@@ -24,7 +24,7 @@ using namespace std;
 void colorhls::computeColorHLS(const cv::Mat &Iin, cv::Mat &Icolorord, const cv::Mat &Mask, std::string mode)
 {
 	//CHECK INPUTS
-	CALCFEAT_DEBUG_1(cout << "In colorhls::computeColorHLS" << end;);
+	CALCFEAT_DEBUG_1(cout << "In colorhls::computeColorHLS" << endl;);
 	if(Itmp.empty() || Iin.rows != Itmp.rows || Iin.cols != Itmp.cols)
 	{
 		Itmp.create(Iin.size(),CV_8UC3);
@@ -144,7 +144,7 @@ void colorhls::computeColorHLS(const cv::Mat &Iin, cv::Mat &Icolorord, const cv:
 		destroyWindow("L");
 		destroyWindow("S");
 	);
-	CALCFEAT_DEBUG_2(cout << "Exit colorhls::computeColorHLS" << end;);
+	CALCFEAT_DEBUG_2(cout << "Exit colorhls::computeColorHLS" << endl;);
 }
 
 
@@ -160,6 +160,7 @@ void colorhls::computeColorHLS(const cv::Mat &Iin, cv::Mat &Icolorord, const cv:
  */
 void gradients::computeGradients(const cv::Mat &Iin, cv::Mat &Icolorord, const cv::Mat Mask, std::string mode)
 {
+
   //CHECK INPUTS
   CALCFEAT_DEBUG_1(cout << "In colorhls::computeColorHLS" << end;);
 //if(Itmp.empty() || Iin.rows != Itmp.rows || Iin.cols != Itmp.cols)
@@ -317,7 +318,7 @@ void depthgrad::computeDepthGradients(const cv::Mat &Iin, cv::Mat &Icolorord, co
 {
 	//THIS IS NOT TESTED YET.  FOR INSTANCE, I MIGHT DECIDE NOT TO USE THRESHOLDS BELOW AT ALL
 	//CHECK INPUTS
-	CALCFEAT_DEBUG_1(cout << "In depthgrad::computeDepthGradients" << end;);
+	CALCFEAT_DEBUG_1(cout << "In depthgrad::computeDepthGradients" << endl;);
 //	if(Itmp.empty() || Iin.rows != Itmp.rows || Iin.cols != Itmp.cols)
 //	{
 //		Itmp.create(Iin.size(),CV_8UC1);
