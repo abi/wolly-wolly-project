@@ -430,7 +430,13 @@ void mmod_general::computeQuery(vector<float> &query, const Mat &I, const Point 
     }
   }
 }  
-        
+
+struct distResult{
+	int index;
+	float dist;
+};
+
+bool sortDistResult (distResult i, distResult j) { return (i.dist > j.dist); }
 
 /**
  * \brief Use FLANN to speed up matching linemod templates centered on a particular point on the test image
@@ -471,7 +477,7 @@ float mmod_general::match_a_patch_flann(const Mat &I, const Point &p, mmod_featu
 		int index = f.perms.at(j).at(k);
 		if(query.at(index) > maxVal){
 			maxVal = query.at(index);
-			maxInd = index;
+			maxInd = k;
 		}
 	}
 	WTAquery.push_back(maxInd); 	
@@ -485,45 +491,78 @@ float mmod_general::match_a_patch_flann(const Mat &I, const Point &p, mmod_featu
  //  cout << "==============================================>>>>>>>>>>>>" << endl;
 
   flann::SearchParams params = flann::SearchParams(64);
-  vector<int> indices;
-  vector<float> dists;
+  // vector<int> indices;
+  // vector<float> dists;
 
   //PRECOMPUTE OFFSETS
   f.convertPoint2PointerOffsets(I); //This is a noop if it is already set. For optimization
 
   // Add 1 because passing in 0 into OpenCV throws a weird error
-  cout << "Number of templates: " << f.features.size() << endl;
+  //cout << "Number of templates: " << f.features.size() << endl;
   
+  int knn = (f.features.size() / 2) + 1;
+
+  if (knn > f.features.size()){
+  	knn = knn - 1;	
+  }
+
+  /*
   // CONFIG KNN
-  int knn = f.features.size(); // / 2)) + 1;
 
   if(WTA)
   	f.flann.knnSearch(WTAquery, indices, dists, knn, params);
   else
   	f.flann.knnSearch(query, indices, dists, knn, params);
   
-  int num_restricted_templates = indices.size();
-  cout << "Number of restricted templates: " << num_restricted_templates << endl;
+  */
+
+
+  vector<distResult> results;
+
+  for(int i =0; i < f.features.size(); i++){
+  	distResult r;
+  	r.dist = 0;
+  	r.index = i;
+
+  	for(int j=0; j < hash_size; j++){
+  		r.dist += pow(f.WTA_storage.at<float>(i, j) - WTAquery.at(j), 2);
+  	}
+
+	results.push_back(r);
+  }
+
+
+  sort(results.begin(), results.end(), sortDistResult);
+
+  //int num_restricted_templates = indices.size();
+  //cout << "Number of restricted templates: " << num_restricted_templates << endl;
   
 
   // TODO: Make print vector macro
-  cout << "Indices vector : ";
-  for(int i = 0; i < indices.size(); ++i) { cout << indices[i] << " ";}
-  cout << endl;
+  // cout << "Indices vector : ";
+  // for(int i = 0; i < indices.size(); ++i) { cout << indices[i] << " ";}
+  // cout << endl;
 
-  cout << "Dists vector : ";
-  for(int i = 0; i < dists.size(); ++i) { cout << dists[i] << " ";}
-  cout << endl;
+  // cout << "Dists vector : ";
+  // for(int i = 0; i < dists.size(); ++i) { cout << dists[i] << " ";}
+  // cout << endl;
     
   vector<vector<int> > poff_nearest;
   vector<Rect> bbox_nearest;
   vector<vector<uchar> > features_nearest;
   
-  for (int i = 0; i < num_restricted_templates; ++i) {
+  for (int i = 0; i < knn; ++i) {
   	//cout << indices[i] << endl;
-    poff_nearest.push_back(f.poff.at(indices[i]));
-    bbox_nearest.push_back(f.bbox.at(indices[i]));
-    features_nearest.push_back(f.features.at(indices[i]));
+  	distResult r = results.back();
+  	int index = r.index;
+
+  	//cout << index << " : ";
+  	//cout << r.dist << " | ";
+  	results.pop_back();
+
+    poff_nearest.push_back(f.poff.at(index));
+    bbox_nearest.push_back(f.bbox.at(index));
+    features_nearest.push_back(f.features.at(index));
   }
 
   // initialize things

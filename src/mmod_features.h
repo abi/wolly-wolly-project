@@ -85,6 +85,7 @@ public:
     //---Ivan and Abi's code--- Use Flann to see if speed improves//
     cv::flann::Index flann;
     std::vector<std::vector<int> > perms;
+    cv::Mat WTA_storage;
 
 	//---temp--- These were created to optimize feature matching//
 	int wstep;											//Flag to convert offsets from cv::Point to uchar*

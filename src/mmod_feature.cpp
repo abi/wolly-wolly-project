@@ -238,7 +238,7 @@ void mmod_features::constructFlannIndex() {
   			int index = perms.at(j).at(k);
   			if(M.at<float>(i, index) > maxVal){
   				maxVal = M.at<float>(i, index);
-  				maxInd = index;
+  				maxInd = k;
   			}
   		}
   		WTA.at<float>(i, j) = maxInd; 
@@ -267,6 +267,8 @@ void mmod_features::constructFlannIndex() {
   flann::AutotunedIndexParams param = flann::AutotunedIndexParams(0.95, 0.01, 0, 0.1);
   //flann::LinearIndexParams param = flann::LinearIndexParams();
   flann = flann::Index();
+
+  WTA_storage = WTA;
 
   if(useWTA){
   	flann.build(WTA, param);
