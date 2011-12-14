@@ -1,0 +1,11 @@
+./data/tea/Mask_0.jpg
+./data/tea/Mask_1.jpg
+./data/tea/Mask_2.jpg
+./data/tea/Mask_3.jpg
+./data/tea/Mask_4.jpg
+./data/tea/Mask_5.jpg
+./data/tea/Mask_6.jpg
+./data/tea/Mask_7.jpg
+./data/tea/Mask_8.jpg
+./data/tea/Mask_9.jpg
+./data/tea/Mask_10.jpg

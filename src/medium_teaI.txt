@@ -1,0 +1,11 @@
+./data/tea/Image_0.jpg
+./data/tea/Image_1.jpg
+./data/tea/Image_2.jpg
+./data/tea/Image_3.jpg
+./data/tea/Image_4.jpg
+./data/tea/Image_5.jpg
+./data/tea/Image_6.jpg
+./data/tea/Image_7.jpg
+./data/tea/Image_8.jpg
+./data/tea/Image_9.jpg
+./data/tea/Image_10.jpg

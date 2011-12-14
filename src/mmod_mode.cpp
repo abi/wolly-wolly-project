@@ -179,14 +179,20 @@ void mmod_mode::construct_flann_index() {
 	float mmod_mode::match_an_object(string &object_ID, const Mat &I, const Point &pp, int &match_index,
 	                                 Rect &R, int &frame_numb)
 	{
+	  //CONFIG::OVERALL
+	  bool FLANN = false;
+
 	  MODE_DEBUG_1(
 	      cout << "In mmod_mode::match_an_object(ID:"<<object_ID<<", point("<<pp.x<<","<<pp.y<<")"<< endl;
 	  );
 	  float score = 0.0;
 	  if(objs.count(object_ID)>0) //If this object exits already
 	  {
-	    //score = util.match_a_patch_bruteforce(I,pp,objs[object_ID],match_index);
-        score = util.match_a_patch_flann(I, pp, objs[object_ID], match_index);
+	  	if(FLANN)
+	  		score = util.match_a_patch_flann(I, pp, objs[object_ID], match_index);
+        else
+        	score = util.match_a_patch_bruteforce(I,pp,objs[object_ID],match_index);
+	    
 	    R = objs[object_ID].bbox[match_index]; //This is the bounding box of the mask. It needs to be offset by pp:
 	    MODE_DEBUG_2(
 	        cout << "score = " << score << " match_index = " << match_index << endl;

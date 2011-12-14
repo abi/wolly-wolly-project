@@ -136,7 +136,6 @@ public:
 	 */
 	cv::Rect find_max_template_size();
 
-
 	/**
 	 * \brief insert a feature at a given index from an external mmod_features class into this mmod_features class
 	 *
@@ -159,17 +158,17 @@ public:
 	 */
 	void convertPoint2PointerOffsets(const cv::Mat &I);
 
-        /**
-         * \brief This function creates a FLANN index after all templates are learned
-         *
-         * This function is called to speed up testing later
-         * @
-         */
-        void constructFlannIndex();
+    /**
+     * \brief This function creates a FLANN index after all templates are learned
+     *
+     * This function is called to speed up testing later
+     * @
+     */
+    void constructFlannIndex();
 
-        // Helper functions for constructing flann index and WTA hasing
-        std::vector<std::vector<int> > generatePerms(int m, int k, int dim);
-        int computeFeatureVecIndex(int width, int height, cv::Point &pt);
+    // Helper functions for constructing flann index and WTA hasing
+    std::vector<std::vector<int> > generatePerms(int m, int k, int dim);
+    int computeFeatureVecIndex(int width, int height, cv::Point &pt);
 };
 
 #endif /* MMOD_FEATURES_H_ */

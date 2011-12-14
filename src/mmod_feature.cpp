@@ -167,6 +167,9 @@ vector<vector<int> > mmod_features::generatePerms(int m, int k, int dim){
  * is already found and also all templates are already loaded.
  */
 void mmod_features::constructFlannIndex() {
+  //CONFIG::WTA
+  bool useWTA = true;
+  
   int num_features = features.size();
   int feature_dim = max_bounds.width * max_bounds.height;
   Mat M = Mat::zeros(num_features, feature_dim, CV_32F);
@@ -221,6 +224,7 @@ void mmod_features::constructFlannIndex() {
     }
   }
 
+  //CONFIG::HASHWTA
   int K = 10; // hash round truncation size
   int hash_size = 200; // hash size
   Mat WTA = Mat::zeros(num_features, hash_size, CV_32F);
@@ -241,6 +245,13 @@ void mmod_features::constructFlannIndex() {
   	}	
   }
 
+  cout << "Printing out features..." << endl;
+  for (int i = 0; i < hash_size; ++i) {
+    cout << WTA.at<float>(1, i) << " ";
+  }
+  cout << endl;
+  cout << " ============================================= " << endl;
+
   	// M.at<float>(i, );
   	// 
 
@@ -256,7 +267,12 @@ void mmod_features::constructFlannIndex() {
   flann::AutotunedIndexParams param = flann::AutotunedIndexParams(0.95, 0.01, 0, 0.1);
   //flann::LinearIndexParams param = flann::LinearIndexParams();
   flann = flann::Index();
-  flann.build(M, param);
+
+  if(useWTA){
+  	flann.build(WTA, param);
+  }else{
+  	flann.build(M, param);
+  }
 }
 
     

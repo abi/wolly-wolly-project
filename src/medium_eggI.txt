@@ -1,0 +1,11 @@
+./data/egg/Image_71.jpg
+./data/egg/Image_72.jpg
+./data/egg/Image_73.jpg
+./data/egg/Image_74.jpg
+./data/egg/Image_75.jpg
+./data/egg/Image_76.jpg
+./data/egg/Image_77.jpg
+./data/egg/Image_78.jpg
+./data/egg/Image_79.jpg
+./data/egg/Image_80.jpg
+./data/egg/Image_81.jpg

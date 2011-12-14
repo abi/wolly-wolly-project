@@ -433,7 +433,6 @@ int mmod_objects::learn_a_template(vector<Mat> &Ifeat, const vector<string> &mod
   int num_models = 0;
   for (Iit = Ifeat.begin(), mit = mode_names.begin(); Iit != Ifeat.end(); ++Iit, ++mit)
   {
-	  cout << "obj::learn_a_template"<<endl;
 		Mat_<uchar>::iterator c = (*Iit).begin<uchar>();
 		for(int i = 0;c != (*Iit).end<uchar>(); ++c,++i)
 		{

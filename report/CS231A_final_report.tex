@@ -42,7 +42,7 @@ Stanford University\\
 \thispagestyle{empty}
 
 %%%%%%%%% ABSTRACT
-\begin{abstract}}
+\begin{abstract}
     We explore several extension to the LINE-MOD detection and object
     recognition algorithm (add reference) to further improve upon its
     speed, scalability and invariance properties. More specifically,
@@ -54,49 +54,24 @@ Stanford University\\
     LINE-Mod detection scale invariant. Finally, we compare the
     performance and speed of WTA hashing with the more traditional
     K-means clustering.
-\end{abstract}}
+\end{abstract}
 
 \section{Introduction}
-Real-time object detection This problem is interesting because of its
-various applications in robotics. A good real-time object recognition
-algorithm would enable robots to perform complex tasks such as
-identifying mugs in the close vicinity in heavily occluded scenarios
-and fetching it for the human user. In particular, our goal with this
-project is to make an existing template matching algorithm, LINE-MOD,
-faster and more scalable.
 
+[ Focus on problem with template matching in general. Don't discuss specifics of LINE-MOD too much.
+]
 
-Focus on problem with template matching in general. Don't discuss
-specifics of LINE-MOD too much.
+Real-time object detection attempts to learn new objects in real-time as well as detect the existing objects in its model.
 
-Problem is one of efficiency, speed. 
+This problem is interesting because of its various applications in robotics. A good real-time object recognition algorithm would enable robots to perform complex tasks such as identifying mugs in the close vicinity in heavily occluded scenarios and fetching it for the human user. In particular, our goal with this project is to make an existing template matching algorithm, LINE-MOD, faster and more scalable.
 
+Many approaches have been tried for real-time object detection. A class of approaches that have been popular in recent times are template matching-based approaches. Template matching is preferred to statistical techniques because new templates can be learned without modifying the existing model too strongly (rephrase). In our research, we base our work off the state of the art LINE-MOD algorithm and attempt to make its detection phase much faster by reducing the dimensionality of the templates and by doing fewer comparisons with templates. The LINE-MOD algorithm performs really well and is extremely fast. However, it does not scale very well with the number of objects and number of templates per object.
 
-Why is it slow?
+ from multiple modalities and generating response maps to a test image, and 
 
-3 paragraphs. Copy a lot from old reports. 
+“Winner take all”, a hashing algorithm that has proven quite useful in generating better results for a wide variety of similarity searches in higher dimensions including matching local feature descriptors.
 
-* Discuss the different possible approaches to this problem.
-
-Making the templates smaller
-Or doing comparisons with fewer templates
-
-Template matching papers 
-
-This section discusses relevant literature for your project
-
-The algorithm that we are working on involves the combination of two existing techniques: (1) “Linemod”, a template matching technique that allows for extremely fast recognition based on extracting features from multiple modalities and generating response maps to a test image, and (2) “Winner take all”, a hashing algorithm that has proven quite useful in generating better results for a wide variety of similarity searches in higher dimensions including matching local feature descriptors.
-
-Because the task at hand is primarily concerned with combining two existing techniques, the papers are extremely relevant to our problem:
-
-Multimodal Templates for Real-Time Detection of Texture-less Objects in Heavily Cluttered Scenes. IEEE International Conference on Computer Vision (ICCV), Barcelona, Spain, November 2011.
-
-The Power of Comparative Reasoning. Jay Yagnik, Dennis Strelow, David Ross, Ruei-Sung Lin. International Conference on Computer Vision (ICCV), 2011.
-
-The exact method of combination is described in greater detail in the next section. Briefly, the present Linemod matching algorithm is linear in the number of different object views, but we use the "winner take all" hashing mechanism to reduce the dimensionality of the object views for each object.
-
-Since our algorithm produces visual results, qualitatively we can evaluate our algorithm by observing how well it performs the recognition task on various image data. We will also use standard quantitative methods to evaluate our results, such as constructing the precision and recall curves when the system identifies various objects. To resolve the ambiguity involved with a “correct” result, we deﬁne a recognition to be correct if the bounding box overlaps at least 50% with the bounding box a reasonable human would use to bound the object, i.e. the “hard truth”.
-
+The interesting challenges in this problem stem from trying to balance improved speed with the heuristic nature of the speed-up. Hence, the goal is to preserve recall that is comparable to brute force matching. In later sections, we describe the effectiveness of the various approaches implemented by us and what we learnt from these different approaches.
 
 \section{Background/Related Work}
 
@@ -126,9 +101,9 @@ The LINE-MOD method primarily relies on discriminative gradient features. More s
 
 After computing these discriminative gradient features in training images containing objects we are trying to identify, the LINE-MOD algorithm employs a similarity measure such that, given a gradient feature in our training image and a fixed offset in the input image coordinates, search a rectangular region around the corresponding gradient location to find the most similar gradient orientation in the input image. The problem with this approach is of course that it grows linearly with the number of training images. And because we do mostly online training (for robotics), there might be a very large number of views/training images for a particular object. The method proposed by Dr. Bradski generates a number of random LINE-MOD features at each point and then, computes the responses from the training set for each of the random set of features. This is where the "Winner Take All" algorithm becomes useful. The "Winner Take All" algorithm is a hashing mechanism that has properties that are very useful in matching applications because it is stable to perturbations and outperforms the best machine learning methods. In our case, we take K of the maximum responses and repeatedly perform the WTA hashing until we attain a vector of desired size (the size is something that we have to figure out experimentally). Hence, we manage to reduce a large number of different object views/templates into a smaller set of constant-size feature vectors for each object.
 
-Once feature vectors are computed for each object, we can continue to use the existing similarity measure defined in the LINE-MOD paper in order to determine matches with a test image. However, it's also possible to use a different learning algorithm that discriminates between various objects based on the feature vector of each object. FLANN is one library that can be used to accomplish the similarly search and it uses a approximate nearest neighbors technique. Doing this might make the results better but at the expense of running time depending on the learning algorithm we decide to implement (we haven't made this decision yet; FLANN, for example, will likely be faster because it's approximate and designed to be faster than a linear search).
+Once feature vectors are computed for each object, we can continue to use the existing similarity measure defined in the LINE-MOD paper in order to determine matches with a test image. However, it's also possible to use a different learning algorithm that discriminates between various objects based on the feature vector of each object. FLANN is one library that can be used to accomplish the similarly search and it uses a approximate nearest neighbors technique. Doing this might make the results better but at the expense of running time depending on the learning algorithm we decide to implement (we haven't made this decision yet; FLANN, for example, will likely be faster because it's approximate and designed to be faster than a linear search)
 
-\section{Intermediate/Preliminary Results}
+[ below used to be Intermediate/Preliminary Results... ]
 
 In this section, we outline how we have utilized our time and efforts thus far. Our initial goal was to thoroughly understand the two papers. This proved quite time-consuming due to our inexperience in this field. However, once we had understood them, it became clearer how the desired speedup and scalability ought to be achieved.
 
@@ -140,10 +115,48 @@ Going forward, the first and most important goal is to get an initial set of tes
 
 \section{Experiment}
 
+[ What is the barrier between the experiment section and the approach section? ]
+
+We attempted to use various for the FLANN library.
+
+We are measuring the speed, precision and the recall of each variant.
+
+Precision
+
+Recall
+
+Modify the k and m.
+
+Number of parameters:
+
+LINE-MOD
+	- Learning threshold
+	- Matching threshold
+	- Step for the sliding window
+	- Vary modalities (and using multiple modalities?)
+
+Flann
+	- knn (nearest neighbours)
+	- distance measure (can't really vary but theoretically possible with FLANN)
+
+WTA
+	- K (round size) - have to fucking change in two places
+	- M (hash size) 
+
+
 This section begins with what kind of experiments you're doing, what kind of dataset(s) you're using, and what is the way you measure or evaluate your results. It then shows in details the results of your experiments. By details, I mean both quantitative evaluations (show numbers, figures, tables, etc) as well as qualitative results (show images, example results, etc).
 
 
+Evaluation of results
+
+Since our algorithm produces visual results, qualitatively we can evaluate our algorithm by observing how well it performs the recognition task on various image data. We will also use standard quantitative methods to evaluate our results, such as constructing the precision and recall curves when the system identifies various objects. To resolve the ambiguity involved with a “correct” result, we deﬁne a recognition to be correct if the bounding box overlaps at least 50% with the bounding box a reasonable human would use to bound the object, i.e. the “hard truth”.
+
 Experimental setup
+
+Because WTA is random, we need to test it multiple times.
+
+
+What kind of distance types did we try? Anything close to cosine similarity?
 
 Description of the dataset that we have from Bradski. 
 
@@ -172,6 +185,17 @@ What have you learned? Suggest future ideas.
 \section{References}
 
 This is absolutely necessary. Reports without references will not receive a score higher than 20 points (total is 40 points).
+
+Template matching...
+
+Multimodal Templates for Real-Time Detection of Texture-less Objects in Heavily Cluttered Scenes. IEEE International Conference on Computer Vision (ICCV), Barcelona, Spain, November 2011.
+
+The Power of Comparative Reasoning. Jay Yagnik, Dennis Strelow, David Ross, Ruei-Sung Lin. International Conference on Computer Vision (ICCV), 2011.
+
+Flann...
+
+
+TODO: Add more references
 
 \section{Supplementary materials}
 

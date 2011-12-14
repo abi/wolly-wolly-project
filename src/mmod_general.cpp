@@ -440,6 +440,9 @@ void mmod_general::computeQuery(vector<float> &query, const Mat &I, const Point 
 float mmod_general::match_a_patch_flann(const Mat &I, const Point &p, mmod_features &f, int &match_index) {
   GENL_DEBUG_1(cout << "mmod_general::match_a_patch_flann" << endl;);
 
+  //CONFIG::WTA
+  bool WTA = true;
+
   match_index = -1;
   if (f.features.empty()) { // handle edge cases
     GENL_DEBUG_2(cout << "In match_a_patch_flann: feature vector passed in is empty" << endl;);
@@ -457,6 +460,7 @@ float mmod_general::match_a_patch_flann(const Mat &I, const Point &p, mmod_featu
  //  // Modify the query for WTA hashing
   vector<float> WTAquery;
   // Constants
+  //CONFIG::HASHWTA
   int K = 10; // hash round truncation size
   int hash_size = 200; // hash size
 
@@ -478,9 +482,9 @@ float mmod_general::match_a_patch_flann(const Mat &I, const Point &p, mmod_featu
  //  }
 
  //  cout << endl;
- //  cout << "===========================888888888888>>>>>>>>>>>>" << endl;
+ //  cout << "==============================================>>>>>>>>>>>>" << endl;
 
-  flann::SearchParams params = flann::SearchParams();
+  flann::SearchParams params = flann::SearchParams(64);
   vector<int> indices;
   vector<float> dists;
 
@@ -488,15 +492,33 @@ float mmod_general::match_a_patch_flann(const Mat &I, const Point &p, mmod_featu
   f.convertPoint2PointerOffsets(I); //This is a noop if it is already set. For optimization
 
   // Add 1 because passing in 0 into OpenCV throws a weird error
-  int knn = ( (int) (f.features.size() / 2) ) + 1;
-  f.flann.knnSearch(query, indices, dists, knn, params);
+  cout << "Number of templates: " << f.features.size() << endl;
+  
+  // CONFIG KNN
+  int knn = f.features.size(); // / 2)) + 1;
 
+  if(WTA)
+  	f.flann.knnSearch(WTAquery, indices, dists, knn, params);
+  else
+  	f.flann.knnSearch(query, indices, dists, knn, params);
+  
   int num_restricted_templates = indices.size();
-  //cout << "Number of restricted templates: " << num_restricted_templates << endl;
+  cout << "Number of restricted templates: " << num_restricted_templates << endl;
+  
+
+  // TODO: Make print vector macro
+  cout << "Indices vector : ";
+  for(int i = 0; i < indices.size(); ++i) { cout << indices[i] << " ";}
+  cout << endl;
+
+  cout << "Dists vector : ";
+  for(int i = 0; i < dists.size(); ++i) { cout << dists[i] << " ";}
+  cout << endl;
+    
   vector<vector<int> > poff_nearest;
   vector<Rect> bbox_nearest;
   vector<vector<uchar> > features_nearest;
-  //cout << "Number of templates: " << f.features.size() << endl;
+  
   for (int i = 0; i < num_restricted_templates; ++i) {
   	//cout << indices[i] << endl;
     poff_nearest.push_back(f.poff.at(indices[i]));
